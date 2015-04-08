@@ -1,0 +1,5 @@
+/Users/Rapharfadet/Desktop/ReseauxOrdinateur/ReseauxOrdinateur/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/Users/Rapharfadet/Desktop/ReseauxOrdinateur/ReseauxOrdinateur/bin/Debug/ReseauxOrdinateur.exe.mdb
+/Users/Rapharfadet/Desktop/ReseauxOrdinateur/ReseauxOrdinateur/bin/Debug/ReseauxOrdinateur.exe
+/Users/Rapharfadet/Desktop/ReseauxOrdinateur/ReseauxOrdinateur/obj/x86/Debug/ReseauxOrdinateur.exe
+/Users/Rapharfadet/Desktop/ReseauxOrdinateur/ReseauxOrdinateur/obj/x86/Debug/ReseauxOrdinateur.exe.mdb
