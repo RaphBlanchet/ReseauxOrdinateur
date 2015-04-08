@@ -38,7 +38,18 @@ namespace ReseauxOrdinateur
 
         public void ecrire_vers_reseau(string paquet)
         {
-			paquet += Paquet.FIN_PAQUET; 		//Ajout du caractère de fin de paquet
+			paquet += Constantes.FIN_PAQUET; 		//Ajout du caractère de fin de paquet
+
+			try{
+				byte[] bytes = new byte[paquet.Length * sizeof(char)];
+				System.Buffer.BlockCopy(paquet.ToCharArray(), 0, bytes, 0, bytes.Length);
+
+				transportOut.Write(bytes, 0, paquet.Length);
+
+			}catch (Exception e){
+				
+			}
+
         }
 
         public void lireCommandes()

@@ -36,5 +36,9 @@ namespace ReseauxOrdinateur
         {
 
         }
+
+		private void traiterCommandeTransport(string commande){
+			Console.WriteLine ("Reseau reçoit de transport : " + commande);
+		}
     }
 }
