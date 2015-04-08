@@ -13,14 +13,17 @@ namespace ReseauxOrdinateur
         NamedPipeServerStream reseauOut;
         bool isRunning = true;
 
-        public EntiteReseau(NamedPipeClientStream _reseauIn, NamedPipeServerStream _reseauOut)
+        //public EntiteReseau(NamedPipeClientStream _reseauIn, NamedPipeServerStream _reseauOut)
+		public EntiteReseau()
         {
-            reseauIn = _reseauIn;
-            reseauOut = _reseauOut;
         }
 
         public void ThreadRun()
         {
+			reseauIn = new NamedPipeClientStream (".", "transportout", PipeDirection.In);
+
+			reseauOut = new NamedPipeServerStream("reseauout", PipeDirection.Out);
+			reseauOut.WaitForConnection ();
             while (isRunning)
             {
 				lire_de_transport ();

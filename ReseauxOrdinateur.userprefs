@@ -1,13 +1,15 @@
 ﻿<Properties StartupItem="ReseauxOrdinateur/ReseauxOrdinateur.csproj" GitUserInfo="UsingMD">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="ReseauxOrdinateur/Paquet.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="ReseauxOrdinateur/Program.cs">
     <Files>
       <File FileName="ReseauxOrdinateur/Primitives.cs" Line="21" Column="3" />
-      <File FileName="ReseauxOrdinateur/EntiteTransport.cs" Line="91" Column="1" />
-      <File FileName="ReseauxOrdinateur/Paquet.cs" Line="23" Column="35" />
-      <File FileName="ReseauxOrdinateur/EntiteReseau.cs" Line="41" Column="67" />
-      <File FileName="ReseauxOrdinateur/Constantes.cs" Line="12" Column="27" />
-      <File FileName="ReseauxOrdinateur/TableConnexions.cs" Line="20" Column="27" />
+      <File FileName="ReseauxOrdinateur/EntiteTransport.cs" Line="88" Column="14" />
+      <File FileName="ReseauxOrdinateur/Paquet.cs" Line="24" Column="6" />
+      <File FileName="ReseauxOrdinateur/EntiteReseau.cs" Line="25" Column="14" />
+      <File FileName="ReseauxOrdinateur/Constantes.cs" Line="1" Column="1" />
+      <File FileName="ReseauxOrdinateur/TableConnexions.cs" Line="1" Column="1" />
+      <File FileName="ReseauxOrdinateur/Utility.cs" Line="22" Column="1" />
+      <File FileName="ReseauxOrdinateur/Program.cs" Line="21" Column="60" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

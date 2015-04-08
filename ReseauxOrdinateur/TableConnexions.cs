@@ -16,12 +16,12 @@ namespace ReseauxOrdinateur
         public int adresseDestinataire;
         public EtatConnexion etat;
 
-        public Connexion(int _num, string _identifiant, int _adresseSource, int _adresseDestinataire, EtatConnexion _etat){
+        public Connexion(int _num, string _identifiant, int _adresseSource, int _adresseDestinataire){
 			numeroConnexion = _num;
             identifiant = _identifiant;
             adresseSource = _adresseSource;
             adresseDestinataire = _adresseDestinataire;
-            etat = _etat;
+			etat = EtatConnexion.ATTENTE_ETABLISSEMENT;
         }
 
     }
@@ -43,9 +43,8 @@ namespace ReseauxOrdinateur
         {
             int adresseSource = GenererAdresse();
             int adresseDestinataire = GenererAdresse();
-            EtatConnexion etat = EtatConnexion.ATTENTE_ETABLISSEMENT;
 
-            Connexion conn = new Connexion(nbConnexions, _identifiant, adresseSource, adresseDestinataire, etat);
+            Connexion conn = new Connexion(nbConnexions, _identifiant, adresseSource, adresseDestinataire);
             listeConnexions.Add(conn);
 			nbConnexions++;
 

@@ -12,14 +12,14 @@ namespace ReseauxOrdinateur
 	{
 		static void Main(string[] args)
 		{
-			NamedPipeServerStream transportOut = new NamedPipeServerStream("transportOut", PipeDirection.Out);
-			NamedPipeClientStream reseauIn = new NamedPipeClientStream (".", "transportOut", PipeDirection.In);
+			/*NamedPipeServerStream transportOut = new NamedPipeServerStream("transportout", PipeDirection.Out);
+			NamedPipeClientStream reseauIn = new NamedPipeClientStream (".", "transportout", PipeDirection.In);
 
-			NamedPipeServerStream reseauOut = new NamedPipeServerStream("reseauOut", PipeDirection.Out);
-			NamedPipeClientStream transportIn = new NamedPipeClientStream(".", "reseauOut", PipeDirection.In);
+			NamedPipeServerStream reseauOut = new NamedPipeServerStream("reseauout", PipeDirection.Out);
+			NamedPipeClientStream transportIn = new NamedPipeClientStream(".", "reseauout", PipeDirection.In);*/
 
-			EntiteReseau ER = new EntiteReseau(reseauIn, reseauOut);
-			EntiteTransport ET = new EntiteTransport(transportIn, transportOut);
+			EntiteReseau ER = new EntiteReseau();
+			EntiteTransport ET = new EntiteTransport();
 
 			//Starting the threads
 			Thread t_ER = new Thread(new ThreadStart(ER.ThreadRun));

@@ -16,15 +16,18 @@ namespace ReseauxOrdinateur
         TableConnexions connexions;
         bool isRunning = true;
 
-        public EntiteTransport(NamedPipeClientStream _transportIn, NamedPipeServerStream _transportOut)
+        //public EntiteTransport(NamedPipeClientStream _transportIn, NamedPipeServerStream _transportOut)
+		public EntiteTransport()
         {
-            transportIn = _transportIn;
-            transportOut = _transportOut;
             connexions = new TableConnexions();
         }
 
         public void ThreadRun()
         {
+			transportOut = new NamedPipeServerStream("transportout", PipeDirection.InOut);
+			transportOut.WaitForConnection ();
+
+			transportIn = new NamedPipeClientStream(".", "reseauout", PipeDirection.In);
             while (isRunning)
             {
                 
