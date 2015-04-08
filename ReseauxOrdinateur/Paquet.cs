@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace ReseauxOrdinateur
 {
+	
+
     class Paquet
     {
-
+		public const char FIN_PAQUET = '|';
     }
 
     class PaquetConnexion : Paquet

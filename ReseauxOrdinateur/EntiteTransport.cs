@@ -38,7 +38,7 @@ namespace ReseauxOrdinateur
 
         public void ecrire_vers_reseau(string paquet)
         {
-
+			paquet += Paquet.FIN_PAQUET; 		//Ajout du caractère de fin de paquet
         }
 
         public void lireCommandes()
