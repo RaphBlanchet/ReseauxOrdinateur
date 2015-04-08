@@ -79,10 +79,11 @@ namespace ReseauxOrdinateur
 
             if (conn != null)
             {
+				int numeroConnexion = conn.numeroConnexion;
                 int addrSource = conn.adresseSource;
                 int addrDestinataire = conn.adresseDestinataire;
 
-
+				PaquetAppel paquet = new PaquetAppel (numeroConnexion, addrSource, addrDestinataire);
             }
         }
     }

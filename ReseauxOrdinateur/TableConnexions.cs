@@ -10,12 +10,14 @@ namespace ReseauxOrdinateur
     enum EtatConnexion{ATTENTE_ETABLISSEMENT, CONNECTE};
 
     class Connexion{
+		public int numeroConnexion;
         public string identifiant;
         public int adresseSource;
         public int adresseDestinataire;
         public EtatConnexion etat;
 
-        public Connexion(string _identifiant, int _adresseSource, int _adresseDestinataire, EtatConnexion _etat){
+        public Connexion(int _num, string _identifiant, int _adresseSource, int _adresseDestinataire, EtatConnexion _etat){
+			numeroConnexion = _num;
             identifiant = _identifiant;
             adresseSource = _adresseSource;
             adresseDestinataire = _adresseDestinataire;
@@ -29,6 +31,7 @@ namespace ReseauxOrdinateur
         List<Connexion> listeConnexions;
         bool[] adressesUtilises;
         int nbAdressesUtilises = 0;
+		static int nbConnexions = 0;
 
         public TableConnexions()
         {
@@ -42,8 +45,9 @@ namespace ReseauxOrdinateur
             int adresseDestinataire = GenererAdresse();
             EtatConnexion etat = EtatConnexion.ATTENTE_ETABLISSEMENT;
 
-            Connexion conn = new Connexion(_identifiant, adresseSource, adresseDestinataire, etat);
+            Connexion conn = new Connexion(nbConnexions, _identifiant, adresseSource, adresseDestinataire, etat);
             listeConnexions.Add(conn);
+			nbConnexions++;
 
             return conn;
         }

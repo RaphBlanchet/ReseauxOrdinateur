@@ -8,7 +8,7 @@ namespace ReseauxOrdinateur
 {
 	
 
-    class Paquet			//Classe de définition des champs
+    abstract class Paquet			//Classe de définition des champs
     {
 		protected int numero_connexion;
 		protected string typePaquet;
