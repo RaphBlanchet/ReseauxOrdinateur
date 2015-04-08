@@ -10,14 +10,14 @@ namespace ReseauxOrdinateur
 
     class Paquet			//Classe de définition des champs
     {
-		
-
 		protected int numero_connexion;
 		protected string typePaquet;
 
 		public Paquet(int _num){
 			numero_connexion = _num;
 		}
+
+		public abstract string ToPaquetString ();
     }
 
     class PaquetConnexion : Paquet
@@ -29,12 +29,15 @@ namespace ReseauxOrdinateur
 			adresseSource = _addrSource;
 			adresseDestination = _addrDestination;
 		}
+
+		public override string ToPaquetString ()
+		{
+			return numero_connexion + ";" + typePaquet + ";" + adresseSource + ";" + adresseDestination;
+		}
     }
 
     class PaquetAppel : PaquetConnexion		//Classe d'initialisation des champs
     {
-		
-
 		public PaquetAppel(int _num, int _addrSource, int _addrDestination) : base(_num, _addrSource, _addrDestination){
 			typePaquet = Constantes.TYPE_PAQUET_APPEL;
 		}
@@ -48,10 +51,15 @@ namespace ReseauxOrdinateur
     }
 
 	class PaquetIndicationLiberation : PaquetConnexion{
-		
+		string raison;
+		public PaquetIndicationLiberation(int _num, int _addrSource, int _addrDestination, string _raison) : base(_num, _addrSource, _addrDestination){
+			typePaquet = Constantes.TYPE_PAQUET_LIBERATION;
+			raison = _raison;
+		}
 
-		public PaquetIndicationLiberation(int _num, int _addrSource, int _addrDestination) : base(_num, _addrSource, _addrDestination){
-			typePaquet = Constantes.TYPE_PAQUET_INDICATION_LIBERATION;
+		public override string ToPaquetString ()
+		{
+			return base.ToPaquetString () + ";" + raison;
 		}
 	}
 
@@ -65,6 +73,12 @@ namespace ReseauxOrdinateur
 			M = _m;
 			//typePaquet = string.Format ("{0:D3}{1:D}{2:D3}0", _pr%8, _ps%8, _m);
 			typePaquet = string.Format("{0:D3}{1:D}{0:D3}0", Convert.ToString(pR%8, 2), M, Convert.ToString(pS%8, 2));
+			donnees = _donnees;
+		}
+
+		public override string ToPaquetString ()
+		{
+			return numero_connexion + ";" + typePaquet + ";" + donnees;
 		}
 	}
 
@@ -77,6 +91,17 @@ namespace ReseauxOrdinateur
 			pR = _pr;
 			string acquittement = (isPositif ? Constantes.TYPE_PAQUET_ACQUITTEMENT_POSITIF : Constantes.TYPE_PAQUER_ACQUITTEMENT_NEGATIF);
 			typePaquet = string.Format ("{0:D3}" + acquittement, Convert.ToString (pR, 2));
+		}
+
+		public override string ToPaquetString ()
+		{
+			return numero_connexion + ";" + typePaquet;
+		}
+	}
+
+	class PaquetDemandeLiberation : PaquetConnexion{
+		public PaquetDemandeLiberation(int _num, int _addrSource, int _addrDestination) : base(_num, _addrSource, _addrDestination){
+			typePaquet = Constantes.TYPE_PAQUET_LIBERATION;
 		}
 	}
 }
