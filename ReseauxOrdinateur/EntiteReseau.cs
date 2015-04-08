@@ -23,13 +23,29 @@ namespace ReseauxOrdinateur
         {
             while (isRunning)
             {
-                Console.WriteLine("Entité de réseau");
+				lire_de_transport ();
             }
         }
 
 		public void lire_de_transport()
         {
+			string paquet = "";
+			try{
+				char c;
+				do{
+					c = (char)reseauIn.ReadByte();
 
+					if(c != Constantes.FIN_PAQUET){
+						paquet += c;
+					}else{
+						traiterPaquetDeTransport(paquet);
+					}
+
+				}while(c != Constantes.FIN_PAQUET);
+
+			}catch(Exception e){
+				
+			}
         }
 
         public void ecrire_vers_transport()
@@ -37,8 +53,8 @@ namespace ReseauxOrdinateur
 
         }
 
-		private void traiterCommandeTransport(string commande){
-			Console.WriteLine ("Reseau reçoit de transport : " + commande);
+		private void traiterPaquetDeTransport(string paquet){
+			Console.WriteLine ("Reseau reçoit de transport : " + paquet);
 		}
     }
 }

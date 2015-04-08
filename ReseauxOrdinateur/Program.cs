@@ -12,11 +12,11 @@ namespace ReseauxOrdinateur
 	{
 		static void Main(string[] args)
 		{
-			NamedPipeServerStream transportOut = new NamedPipeServerStream("transportOut");
-			NamedPipeClientStream reseauIn = new NamedPipeClientStream("transportOut");
+			NamedPipeServerStream transportOut = new NamedPipeServerStream("transportOut", PipeDirection.Out);
+			NamedPipeClientStream reseauIn = new NamedPipeClientStream (".", "transportOut", PipeDirection.In);
 
-			NamedPipeServerStream reseauOut = new NamedPipeServerStream("reseauOut");
-			NamedPipeClientStream transportIn = new NamedPipeClientStream("reseauOut");
+			NamedPipeServerStream reseauOut = new NamedPipeServerStream("reseauOut", PipeDirection.Out);
+			NamedPipeClientStream transportIn = new NamedPipeClientStream(".", "reseauOut", PipeDirection.In);
 
 			EntiteReseau ER = new EntiteReseau(reseauIn, reseauOut);
 			EntiteTransport ET = new EntiteTransport(transportIn, transportOut);
@@ -28,7 +28,7 @@ namespace ReseauxOrdinateur
 			t_ER.Start();
 			t_ET.Start();
 
-			Thread.Sleep(1000);
+			Thread.Sleep(10000);
 
 			t_ER.Abort();
 			t_ET.Abort();

@@ -1,1 +1,17 @@
-﻿<Properties StartupItem="ReseauxOrdinateur/ReseauxOrdinateur.csproj" GitUserInfo="UsingMD" />
+﻿<Properties StartupItem="ReseauxOrdinateur/ReseauxOrdinateur.csproj" GitUserInfo="UsingMD">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="ReseauxOrdinateur/Paquet.cs">
+    <Files>
+      <File FileName="ReseauxOrdinateur/Primitives.cs" Line="21" Column="3" />
+      <File FileName="ReseauxOrdinateur/EntiteTransport.cs" Line="91" Column="1" />
+      <File FileName="ReseauxOrdinateur/Paquet.cs" Line="23" Column="35" />
+      <File FileName="ReseauxOrdinateur/EntiteReseau.cs" Line="41" Column="67" />
+      <File FileName="ReseauxOrdinateur/Constantes.cs" Line="12" Column="27" />
+      <File FileName="ReseauxOrdinateur/TableConnexions.cs" Line="20" Column="27" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

@@ -27,7 +27,7 @@ namespace ReseauxOrdinateur
         {
             while (isRunning)
             {
-                Console.WriteLine("Entité de transport");
+                
             }
         }
 
@@ -36,15 +36,15 @@ namespace ReseauxOrdinateur
 
         }
 
-        public void ecrire_vers_reseau(string paquet)
+        public void ecrire_vers_reseau(Paquet paquet)
         {
-			paquet += Constantes.FIN_PAQUET; 		//Ajout du caractère de fin de paquet
+			string strPaquet = paquet.ToPaquetString () + Constantes.FIN_PAQUET;
 
 			try{
-				byte[] bytes = new byte[paquet.Length * sizeof(char)];
-				System.Buffer.BlockCopy(paquet.ToCharArray(), 0, bytes, 0, bytes.Length);
+				byte[] bytes = new byte[strPaquet.Length * sizeof(char)];
+				System.Buffer.BlockCopy(strPaquet.ToCharArray(), 0, bytes, 0, bytes.Length);
 
-				transportOut.Write(bytes, 0, paquet.Length);
+				transportOut.Write(bytes, 0, strPaquet.Length);
 
 			}catch (Exception e){
 				
@@ -73,7 +73,7 @@ namespace ReseauxOrdinateur
             }
         }
 
-        public void EtablirConnexion(String _identifiant)
+        public void EtablirConnexion(string _identifiant)
         {
             Connexion conn = connexions.EtablirConnexion(_identifiant);
 
@@ -84,7 +84,12 @@ namespace ReseauxOrdinateur
                 int addrDestinataire = conn.adresseDestinataire;
 
 				PaquetAppel paquet = new PaquetAppel (numeroConnexion, addrSource, addrDestinataire);
+				ecrire_vers_reseau (paquet);
             }
         }
+
+		private void EnvoyerDonnees(string identifiant, string donnees){
+			
+		}
     }
 }

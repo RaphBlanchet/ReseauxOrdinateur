@@ -41,6 +41,7 @@
     <Compile Include="Primitives.cs" />
     <Compile Include="TableConnexions.cs" />
     <Compile Include="Constantes.cs" />
+    <Compile Include="Utility.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
