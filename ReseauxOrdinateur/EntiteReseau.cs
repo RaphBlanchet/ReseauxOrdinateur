@@ -9,21 +9,18 @@ namespace ReseauxOrdinateur
 {
     class EntiteReseau
     {
-        NamedPipeClientStream reseauIn;
-        NamedPipeServerStream reseauOut;
+		AnonymousPipeClientStream reseauIn;
+		AnonymousPipeServerStream reseauOut;
         bool isRunning = true;
 
-        //public EntiteReseau(NamedPipeClientStream _reseauIn, NamedPipeServerStream _reseauOut)
-		public EntiteReseau()
+		public EntiteReseau(AnonymousPipeClientStream _reseauIn, AnonymousPipeServerStream _reseauOut)
         {
+			reseauIn = _reseauIn;
+			reseauOut = _reseauOut;
         }
 
         public void ThreadRun()
         {
-			reseauIn = new NamedPipeClientStream (".", "transportout", PipeDirection.In);
-
-			reseauOut = new NamedPipeServerStream("reseauout", PipeDirection.Out);
-			reseauOut.WaitForConnection ();
             while (isRunning)
             {
 				lire_de_transport ();

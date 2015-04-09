@@ -11,23 +11,20 @@ namespace ReseauxOrdinateur
 {
     class EntiteTransport
     {
-        NamedPipeClientStream transportIn;
-        NamedPipeServerStream transportOut;
+		AnonymousPipeClientStream transportIn;
+		AnonymousPipeServerStream transportOut;
         TableConnexions connexions;
         bool isRunning = true;
 
-        //public EntiteTransport(NamedPipeClientStream _transportIn, NamedPipeServerStream _transportOut)
-		public EntiteTransport()
+        public EntiteTransport(NamedPipeClientStream _transportIn, NamedPipeServerStream _transportOut)
         {
+			transportIn = _transportIn;
+			transportOut = _transportOut;
             connexions = new TableConnexions();
         }
 
         public void ThreadRun()
         {
-			transportOut = new NamedPipeServerStream("transportout", PipeDirection.InOut);
-			transportOut.WaitForConnection ();
-
-			transportIn = new NamedPipeClientStream(".", "reseauout", PipeDirection.In);
             while (isRunning)
             {
                 
