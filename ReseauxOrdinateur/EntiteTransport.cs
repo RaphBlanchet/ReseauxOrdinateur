@@ -33,18 +33,34 @@ namespace ReseauxOrdinateur
 
         public void lire_de_reseau()
         {
+			string commande = "";
+			try{
+				char c;
+				do{
+					c = (char)transportIn.ReadByte();
 
+					if(c != Constantes.FIN_PAQUET){
+						commande += c;
+					}else{
+						TraiterCommandeDeReseau(commande);
+					}
+
+				}while(c != Constantes.FIN_PAQUET);
+
+			}catch(Exception e){
+
+			}
         }
 
-        public void ecrire_vers_reseau(Paquet paquet)
+		public void ecrire_vers_reseau(string str)
         {
-			string strPaquet = paquet.ToPaquetString () + Constantes.FIN_PAQUET;
+			str += Constantes.FIN_PAQUET;
 
 			try{
-				byte[] bytes = new byte[strPaquet.Length * sizeof(char)];
-				System.Buffer.BlockCopy(strPaquet.ToCharArray(), 0, bytes, 0, bytes.Length);
+				byte[] bytes = new byte[str.Length * sizeof(char)];
+				System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
 
-				transportOut.Write(bytes, 0, strPaquet.Length);
+				transportOut.Write(bytes, 0, str.Length);
 
 			}catch (IOException e){
 				
@@ -79,17 +95,22 @@ namespace ReseauxOrdinateur
 
             if (conn != null)
             {
-				int numeroConnexion = conn.numeroConnexion;
                 int addrSource = conn.adresseSource;
                 int addrDestinataire = conn.adresseDestinataire;
 
-				PaquetAppel paquet = new PaquetAppel (numeroConnexion, addrSource, addrDestinataire);
-				ecrire_vers_reseau (paquet);
+				//PaquetAppel paquet = new PaquetAppel (numeroConnexion, addrSource, addrDestinataire);
+				ecrire_vers_reseau (_identifiant + ";" + N_CONNECT.req + ";" + addrSource + ";" + addrDestinataire);
 				lire_de_reseau ();				//On attend une confirmation de reseau
             }
         }
 
 		private void EnvoyerDonnees(string identifiant, string donnees){
+			if (connexions [identifiant].etat == EtatConnexion.CONNECTE) {
+				ecrire_vers_reseau (identifiant + ";" + N_DATA.req + ";" + donnees);
+			}
+		}
+
+		private void TraiterCommandeDeReseau(string commande){
 			
 		}
     }

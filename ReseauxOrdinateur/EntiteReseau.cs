@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO.Pipes;
+using System.IO;
 
 namespace ReseauxOrdinateur
 {
@@ -12,11 +13,13 @@ namespace ReseauxOrdinateur
 		AnonymousPipeClientStream reseauIn;
 		AnonymousPipeServerStream reseauOut;
         bool isRunning = true;
+		TableConnexionReseau connexions;
 
 		public EntiteReseau(AnonymousPipeClientStream _reseauIn, AnonymousPipeServerStream _reseauOut)
         {
 			reseauIn = _reseauIn;
 			reseauOut = _reseauOut;
+			connexions = new TableConnexionReseau ();
         }
 
         public void ThreadRun()
@@ -48,9 +51,18 @@ namespace ReseauxOrdinateur
 			}
         }
 
-        public void ecrire_vers_transport()
+		public void ecrire_vers_transport(Paquet paquet)
         {
+			string strPaquet = paquet.ToPaquetString () + Constantes.FIN_PAQUET;
 
+			try{
+				byte[] bytes = new byte[strPaquet.Length * sizeof(char)];
+				System.Buffer.BlockCopy(strPaquet.ToCharArray(), 0, bytes, 0, bytes.Length);
+
+				reseauOut.Write(bytes, 0, strPaquet.Length);
+			}catch (IOException e){
+
+			}
         }
 
 		private void traiterPaquetDeTransport(string paquet){
@@ -58,6 +70,7 @@ namespace ReseauxOrdinateur
 			string[] paq = paquet.Split (';');
 
 			if (paq [0].Equals(N_CONNECT.req)) {
+				
 			}
 		}
     }

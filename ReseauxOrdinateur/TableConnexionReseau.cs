@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace ReseauxOrdinateur
 {
 	public class ConnexionReseau : Connexion{
-		int niec;
-		int pr;
-		int ps;
+		public int niec;
+		public int pr;
+		public int ps;
 		public ConnexionReseau(int _num, string _identifiant, int _adresseSource, int _adresseDestinataire, int _niec) : base(_num, _identifiant, _adresseSource, _adresseDestinataire){
 			niec = _niec;
 			pr = 0;
@@ -34,6 +34,14 @@ namespace ReseauxOrdinateur
 		public void RetirerConnexion(string identifiant){
 			ConnexionReseau conn = this [identifiant];
 			listeConnexions.Remove (conn);
+		}
+
+		public void ModifierPS(string identifiant, int val){
+			this [identifiant].ps += val;
+		}
+
+		public void ModifierPR(string identifiant, int val){
+			this [identifiant].pr += val;
 		}
 
 		public ConnexionReseau this[int i]

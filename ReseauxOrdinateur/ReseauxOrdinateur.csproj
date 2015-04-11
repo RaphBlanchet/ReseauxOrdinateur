@@ -44,6 +44,7 @@
     <Compile Include="Utility.cs" />
     <Compile Include="Liaison.cs" />
     <Compile Include="TableConnexionReseau.cs" />
+    <Compile Include="TableConnexionLiaison.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
