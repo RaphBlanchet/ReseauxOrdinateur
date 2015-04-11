@@ -31,6 +31,24 @@ namespace ReseauxOrdinateur
 			nbConnexions ++;
 		}
 
+		public void RetirerConnexion(string identifiant){
+			ConnexionReseau conn = this [identifiant];
+			listeConnexions.Remove (conn);
+		}
+
+		public ConnexionReseau this[int i]
+		{
+			get
+			{
+				return listeConnexions[i];
+			}
+
+			set
+			{
+				listeConnexions[i] = value;
+			}
+		}
+
 		public ConnexionReseau this[String identifiant]
 		{
 			get
@@ -45,11 +63,6 @@ namespace ReseauxOrdinateur
 				}
 
 				return conn;
-			}
-
-			set
-			{
-
 			}
 		}
 	}

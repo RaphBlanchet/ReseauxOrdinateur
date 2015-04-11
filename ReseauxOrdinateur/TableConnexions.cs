@@ -7,7 +7,7 @@ using System.Collections;
 
 namespace ReseauxOrdinateur
 {
-    class Connexion{
+    public class Connexion{
 		public int numeroConnexion;
         public string identifiant;
         public int adresseSource;

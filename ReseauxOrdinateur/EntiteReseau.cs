@@ -57,10 +57,7 @@ namespace ReseauxOrdinateur
 			Console.WriteLine ("Reseau reçoit de transport : " + paquet);
 			string[] paq = paquet.Split (';');
 
-			switch (paq [0]) {
-				case N_CONNECT.req:
-					
-					break;
+			if (paq [0].Equals(N_CONNECT.req)) {
 			}
 		}
     }
