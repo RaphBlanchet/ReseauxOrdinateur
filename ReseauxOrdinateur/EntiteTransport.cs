@@ -16,7 +16,7 @@ namespace ReseauxOrdinateur
         TableConnexions connexions;
         bool isRunning = true;
 
-        public EntiteTransport(NamedPipeClientStream _transportIn, NamedPipeServerStream _transportOut)
+		public EntiteTransport(AnonymousPipeClientStream _transportIn, AnonymousPipeServerStream _transportOut)
         {
 			transportIn = _transportIn;
 			transportOut = _transportOut;
@@ -46,7 +46,7 @@ namespace ReseauxOrdinateur
 
 				transportOut.Write(bytes, 0, strPaquet.Length);
 
-			}catch (Exception e){
+			}catch (IOException e){
 				
 			}
 
@@ -85,6 +85,7 @@ namespace ReseauxOrdinateur
 
 				PaquetAppel paquet = new PaquetAppel (numeroConnexion, addrSource, addrDestinataire);
 				ecrire_vers_reseau (paquet);
+				lire_de_reseau ();				//On attend une confirmation de reseau
             }
         }
 

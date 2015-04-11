@@ -3,3 +3,8 @@
 /Users/Rapharfadet/Desktop/ReseauxOrdinateur/ReseauxOrdinateur/bin/Debug/ReseauxOrdinateur.exe
 /Users/Rapharfadet/Desktop/ReseauxOrdinateur/ReseauxOrdinateur/obj/x86/Debug/ReseauxOrdinateur.exe
 /Users/Rapharfadet/Desktop/ReseauxOrdinateur/ReseauxOrdinateur/obj/x86/Debug/ReseauxOrdinateur.exe.mdb
+/Users/ANGUA33/Documents/RAPH_A_EFFACER_APRES/ReseauxOrdinateur/ReseauxOrdinateur/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/Users/ANGUA33/Documents/RAPH_A_EFFACER_APRES/ReseauxOrdinateur/ReseauxOrdinateur/bin/Debug/ReseauxOrdinateur.exe.mdb
+/Users/ANGUA33/Documents/RAPH_A_EFFACER_APRES/ReseauxOrdinateur/ReseauxOrdinateur/bin/Debug/ReseauxOrdinateur.exe
+/Users/ANGUA33/Documents/RAPH_A_EFFACER_APRES/ReseauxOrdinateur/ReseauxOrdinateur/obj/x86/Debug/ReseauxOrdinateur.exe
+/Users/ANGUA33/Documents/RAPH_A_EFFACER_APRES/ReseauxOrdinateur/ReseauxOrdinateur/obj/x86/Debug/ReseauxOrdinateur.exe.mdb
