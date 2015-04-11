@@ -69,7 +69,7 @@ namespace ReseauxOrdinateur
                 }
 
                 //Envoi des données
-
+				EnvoyerDonnees(identifiant, lineSplit[1]);
             }
         }
 

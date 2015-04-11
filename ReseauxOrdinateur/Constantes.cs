@@ -2,6 +2,8 @@
 
 namespace ReseauxOrdinateur
 {
+	enum EtatConnexion{ATTENTE_ETABLISSEMENT, CONNECTE};
+
 	public abstract class Constantes
 	{
 		public const char FIN_PAQUET = '|';

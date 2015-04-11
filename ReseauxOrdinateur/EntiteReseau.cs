@@ -55,6 +55,13 @@ namespace ReseauxOrdinateur
 
 		private void traiterPaquetDeTransport(string paquet){
 			Console.WriteLine ("Reseau reçoit de transport : " + paquet);
+			string[] paq = paquet.Split (';');
+
+			switch (paq [0]) {
+				case N_CONNECT.req:
+					
+					break;
+			}
 		}
     }
 }

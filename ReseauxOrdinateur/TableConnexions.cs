@@ -7,8 +7,6 @@ using System.Collections;
 
 namespace ReseauxOrdinateur
 {
-    enum EtatConnexion{ATTENTE_ETABLISSEMENT, CONNECTE};
-
     class Connexion{
 		public int numeroConnexion;
         public string identifiant;
@@ -58,7 +56,6 @@ namespace ReseauxOrdinateur
         
         public int GenererAdresse()
         {
-
             if (nbAdressesUtilises >= 250)
                 return -1;
 
@@ -74,6 +71,10 @@ namespace ReseauxOrdinateur
 
             return adresse;
         }
+
+		public void ConfirmerConnexion(string _identifiant){
+			this [_identifiant].etat = EtatConnexion.CONNECTE;
+		}
 
         public Connexion this[int i]
         {
