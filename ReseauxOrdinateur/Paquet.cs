@@ -8,10 +8,10 @@ namespace ReseauxOrdinateur
 {
 	
 
-    abstract class Paquet			//Classe de définition des champs
+    public abstract class Paquet			//Classe de définition des champs
     {
-		protected int numero_connexion;
-		protected string typePaquet;
+		public int numero_connexion;
+		public string typePaquet;
 
 		public Paquet(int _num){
 			numero_connexion = _num;
@@ -22,8 +22,8 @@ namespace ReseauxOrdinateur
 
     class PaquetConnexion : Paquet
     {
-		protected int adresseSource;
-		protected int adresseDestination;
+		public int adresseSource;
+		public int adresseDestination;
 
 		public PaquetConnexion(int _num, int _addrSource, int _addrDestination) : base(_num){
 			adresseSource = _addrSource;

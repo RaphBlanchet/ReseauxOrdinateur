@@ -59,14 +59,15 @@ namespace ReseauxOrdinateur
             if (nbAdressesUtilises >= 250)
                 return -1;
 
-            Random rand = new Random(250);
+            Random rand = new Random();
             int adresse = 0;
 
             do
             {
-                adresse = rand.Next();
+                adresse = rand.Next(250);
             } while (adressesUtilises[adresse] == true);
 
+            adressesUtilises[adresse] = true;
             nbAdressesUtilises++;
 
             return adresse;
@@ -76,16 +77,21 @@ namespace ReseauxOrdinateur
 			this [_identifiant].etat = EtatConnexion.CONNECTE;
 		}
 
-        public Connexion this[int i]
+        public Connexion this[int numConn]
         {
             get
             {
-                return listeConnexions[i];
-            }
+                Connexion conn = null;
+                foreach (Connexion c in listeConnexions)
+                {
+                    if (c.numeroConnexion == numConn)
+                    {
+                        conn = c;
+                        break;
+                    }
+                }
 
-            set
-            {
-                listeConnexions[i] = value;
+                return conn;
             }
         }
 
@@ -103,11 +109,6 @@ namespace ReseauxOrdinateur
                 }
 
                 return conn;
-            }
-
-            set
-            {
-
             }
         }
     }

@@ -1,0 +1,4 @@
+MSG;Envoie de données par Messenger
+INT;Envoie de données par un Fureteur Internet
+SKY;Envoie de données par Skype
+VLC;Envoie de données par VLC

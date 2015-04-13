@@ -3,11 +3,17 @@ using System.Collections.Generic;
 
 namespace ReseauxOrdinateur
 {
-	public class ConnexionReseau : Connexion{
+	public class ConnexionReseau{
+        public int numeroConnexion;
+        public int adresseSource;
+        public int adresseDestinataire;
 		public int niec;
 		public int pr;
 		public int ps;
-		public ConnexionReseau(int _num, string _identifiant, int _adresseSource, int _adresseDestinataire, int _niec) : base(_num, _identifiant, _adresseSource, _adresseDestinataire){
+		public ConnexionReseau(int _num, int _adresseSource, int _adresseDestinataire, int _niec){
+            numeroConnexion = _num;
+            adresseSource = _adresseSource;
+            adresseDestinataire = _adresseDestinataire;
 			niec = _niec;
 			pr = 0;
 			ps = 0;
@@ -25,26 +31,26 @@ namespace ReseauxOrdinateur
 			listeConnexions = new List<ConnexionReseau> ();
 		}
 
-		public void EtablirConnexion(string identifiant, int addrSrouce, int addreDest, int niec){
-			ConnexionReseau conn = new ConnexionReseau (nbConnexions, identifiant, addrSrouce, addreDest, niec);
+		public void EtablirConnexion(int addrSrouce, int addreDest, int niec){
+			ConnexionReseau conn = new ConnexionReseau (nbConnexions, addrSrouce, addreDest, niec);
 			listeConnexions.Add (conn);
 			nbConnexions ++;
 		}
 
-		public void RetirerConnexion(string identifiant){
-			ConnexionReseau conn = this [identifiant];
+		public void RetirerConnexion(int niec){
+			ConnexionReseau conn = this [niec];
 			listeConnexions.Remove (conn);
 		}
 
-		public void ModifierPS(string identifiant, int val){
-			this [identifiant].ps += val;
+		public void ModifierPS(int niec, int val){
+			this [niec].ps += val;
 		}
 
-		public void ModifierPR(string identifiant, int val){
-			this [identifiant].pr += val;
+		public void ModifierPR(int niec, int val){
+			this [niec].pr += val;
 		}
 
-		public ConnexionReseau this[int i]
+		/*public ConnexionReseau this[int i]
 		{
 			get
 			{
@@ -55,15 +61,15 @@ namespace ReseauxOrdinateur
 			{
 				listeConnexions[i] = value;
 			}
-		}
+		}*/
 
-		public ConnexionReseau this[String identifiant]
+		public ConnexionReseau this[int niec]
 		{
 			get
 			{
 				ConnexionReseau conn = null ;
 				foreach(ConnexionReseau c in listeConnexions){
-					if (c.identifiant.Equals(identifiant))
+					if (c.niec == niec)
 					{
 						conn = c;
 						break;

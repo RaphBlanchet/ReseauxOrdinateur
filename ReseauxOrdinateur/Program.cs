@@ -30,12 +30,14 @@ namespace ReseauxOrdinateur
 			t_ER.Start();
 			t_ET.Start();
 
-			Thread.Sleep(10000);
+            ET.lireCommandes();
 
-			t_ER.Abort();
-			t_ET.Abort();
+			//Thread.Sleep(10000);
 
-			Console.Read();
+			//t_ER.Abort();
+			//t_ET.Abort();
+
+			//Console.Read();
 		}
 	}
 }

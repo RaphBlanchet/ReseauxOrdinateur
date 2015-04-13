@@ -27,7 +27,7 @@ namespace ReseauxOrdinateur
         {
             while (isRunning)
             {
-                
+                lire_de_reseau();
             }
         }
 
@@ -54,11 +54,11 @@ namespace ReseauxOrdinateur
 
 		public void ecrire_vers_reseau(string str)
         {
+            Console.Out.WriteLine("Transport vers Reseau : " + str);
 			str += Constantes.FIN_PAQUET;
 
 			try{
-				byte[] bytes = new byte[str.Length * sizeof(char)];
-				System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
+                byte[] bytes = Encoding.UTF8.GetBytes(str);
 
 				transportOut.Write(bytes, 0, str.Length);
 
@@ -78,10 +78,11 @@ namespace ReseauxOrdinateur
                 string identifiant = lineSplit[0];
 
                 //On vérifie si la connexion n'est pas déjà établie
+                Console.WriteLine("\nLecture de S_Lec : " + line);
                 if (!connexions.ContientConnexion(identifiant))
                 {
                     EtablirConnexion(identifiant);
-                    Thread.Sleep(250);
+                    Thread.Sleep(1000);
                 }
 
                 //Envoi des données
@@ -95,12 +96,13 @@ namespace ReseauxOrdinateur
 
             if (conn != null)
             {
+                int numConn = conn.numeroConnexion;
                 int addrSource = conn.adresseSource;
                 int addrDestinataire = conn.adresseDestinataire;
 
 				//PaquetAppel paquet = new PaquetAppel (numeroConnexion, addrSource, addrDestinataire);
-				ecrire_vers_reseau (_identifiant + ";" + N_CONNECT.req + ";" + addrSource + ";" + addrDestinataire);
-				lire_de_reseau ();				//On attend une confirmation de reseau
+				ecrire_vers_reseau (numConn + ";" + N_CONNECT.req + ";" + addrSource + ";" + addrDestinataire);
+				//lire_de_reseau ();				//On attend une confirmation de reseau
             }
         }
 

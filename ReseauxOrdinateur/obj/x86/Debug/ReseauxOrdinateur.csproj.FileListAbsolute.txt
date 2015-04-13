@@ -1,0 +1,6 @@
+C:\Users\blanchra\Desktop\ReseauxOrdinateur-master\ReseauxOrdinateur\obj\x86\Debug\ReseauxOrdinateur.exe
+C:\Users\blanchra\Desktop\ReseauxOrdinateur-master\ReseauxOrdinateur\bin\Debug\ReseauxOrdinateur.exe
+C:\Users\blanchra\Desktop\ReseauxOrdinateur-master\ReseauxOrdinateur\bin\Debug\ReseauxOrdinateur.pdb
+C:\Users\blanchra\Desktop\ReseauxOrdinateur-master\ReseauxOrdinateur\obj\x86\Debug\ReseauxOrdinateur.csprojResolveAssemblyReference.cache
+C:\Users\blanchra\Desktop\ReseauxOrdinateur-master\ReseauxOrdinateur\obj\x86\Debug\ReseauxOrdinateur.pdb
+C:\Users\blanchra\Desktop\ReseauxOrdinateur-master\ReseauxOrdinateur\bin\Debug\S_lec.txt
