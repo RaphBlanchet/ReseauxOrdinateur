@@ -21,7 +21,6 @@ namespace ReseauxOrdinateur
             adresseDestinataire = _adresseDestinataire;
 			etat = EtatConnexion.ATTENTE_ETABLISSEMENT;
         }
-
     }
 
     class TableConnexions
@@ -76,6 +75,12 @@ namespace ReseauxOrdinateur
 		public void ConfirmerConnexion(string _identifiant){
 			this [_identifiant].etat = EtatConnexion.CONNECTE;
 		}
+
+        public void ConfirmerConnexion(int _numConn)
+        {
+            this[_numConn].etat = EtatConnexion.CONNECTE;
+            Console.WriteLine("Connexion établie pour " + this[_numConn].identifiant);
+        }
 
         public Connexion this[int numConn]
         {

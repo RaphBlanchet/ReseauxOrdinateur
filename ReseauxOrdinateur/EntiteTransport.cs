@@ -82,11 +82,20 @@ namespace ReseauxOrdinateur
                 if (!connexions.ContientConnexion(identifiant))
                 {
                     EtablirConnexion(identifiant);
-                    Thread.Sleep(1000);
                 }
 
                 //Envoi des données
-				EnvoyerDonnees(identifiant, lineSplit[1]);
+                while (true)
+                {
+                    if (connexions[identifiant] == null) break; //Si la connexion n'existe plus, on envoit rien
+
+                    //On attend la connexion
+                    if (connexions[identifiant].etat == EtatConnexion.CONNECTE){
+                        EnvoyerDonnees(identifiant, lineSplit[1]);
+                        break;
+                    }
+                }
+				
             }
         }
 
@@ -102,7 +111,6 @@ namespace ReseauxOrdinateur
 
 				//PaquetAppel paquet = new PaquetAppel (numeroConnexion, addrSource, addrDestinataire);
 				ecrire_vers_reseau (numConn + ";" + N_CONNECT.req + ";" + addrSource + ";" + addrDestinataire);
-				//lire_de_reseau ();				//On attend une confirmation de reseau
             }
         }
 
@@ -113,7 +121,12 @@ namespace ReseauxOrdinateur
 		}
 
 		private void TraiterCommandeDeReseau(string commande){
-			
+            string[] split = commande.Split(';');
+
+            if (split[1] == N_CONNECT.conf.ToString())
+            {
+                connexions.ConfirmerConnexion(Int32.Parse(split[0]));
+            }
 		}
     }
 }

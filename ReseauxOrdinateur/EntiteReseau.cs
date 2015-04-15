@@ -43,7 +43,7 @@ namespace ReseauxOrdinateur
 					if(c != Constantes.FIN_PAQUET){
 						paquet += c;
 					}else{
-						traiterPaquetDeTransport(paquet);
+						traiterPrimitiveDeTransport(paquet);
 					}
 				}while(c != Constantes.FIN_PAQUET);
 
@@ -71,17 +71,18 @@ namespace ReseauxOrdinateur
             }
         }
 
-		private void traiterPaquetDeTransport(string strpaquet){
+		private void traiterPrimitiveDeTransport(string strpaquet){
 			Console.WriteLine ("Reseau reçoit de transport : " + strpaquet);
 			string[] paq = strpaquet.Split (';');
 
-			if (paq [1].Equals(N_CONNECT.req.ToString())) {
+			if (paq [1] == N_CONNECT.req.ToString()) {
                 //Parametres : Adresse Source, Adresse Destination, NIEC
                 connexions.EtablirConnexion(Convert.ToInt32(paq[2]), Convert.ToInt32(paq[3]), Convert.ToInt32(paq[0]));
 
                 //Parametres : NIEC, Adresse Source, Adresse Destination
                 PaquetAppel paquet = new PaquetAppel(Convert.ToInt32(paq[0]), Convert.ToInt32(paq[2]), Convert.ToInt32(paq[3]));
                 Paquet reponse = liaison.TraiterPaquetDeReseau(paquet);
+                TraiterPaquetDeLiaison(reponse);
 			}
 		}
 
