@@ -64,14 +64,15 @@ namespace ReseauxOrdinateur
 	}
 
 	class PaquetDonnees : Paquet{
-		int pR, pS, M;
-		string donnees;
+		public int pR, pS, M;
+		public string donnees;
 
 		public PaquetDonnees(int _num, int _pr, int _ps, int _m, string _donnees) : base(_num){
 			pR = _pr%8;
 			pS = _ps%8;
 			M = _m;
-			typePaquet = string.Format("{0:D3}{1:D}{2:D3}0", Convert.ToString(pR, 2), M, Convert.ToString(pS, 2));
+			//typePaquet = string.Format("{0:D3}{1:D}{2:D3}0", Convert.ToString(pR, 2), M, Convert.ToString(pS, 2));
+            typePaquet = pR.ToString() + M.ToString() + pS.ToString() + "0";
 			donnees = _donnees;
 		}
 
@@ -89,7 +90,8 @@ namespace ReseauxOrdinateur
 			isPositif = _pos;
 			pR = _pr;
 			string acquittement = (isPositif ? Constantes.TYPE_PAQUET_ACQUITTEMENT_POSITIF : Constantes.TYPE_PAQUET_ACQUITTEMENT_NEGATIF);
-			typePaquet = string.Format ("{0:D3}" + acquittement, Convert.ToString (pR, 2));
+			//typePaquet = string.Format ("{0:D3}" + acquittement, Convert.ToString (pR, 2));
+            typePaquet = pR.ToString() + acquittement;
 		}
 
 		public override string ToPaquetString ()

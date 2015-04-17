@@ -21,7 +21,6 @@ namespace ReseauxOrdinateur
 			
 		}
 
-		public ConnexionLiaison
 	}
 
 	public class ConnexionLiaison

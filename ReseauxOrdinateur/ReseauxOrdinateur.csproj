@@ -39,7 +39,7 @@
     <Compile Include="EntiteTransport.cs" />
     <Compile Include="Paquet.cs" />
     <Compile Include="Primitives.cs" />
-    <Compile Include="TableConnexions.cs" />
+    <Compile Include="TableConnexionTransport.cs" />
     <Compile Include="Constantes.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="Liaison.cs" />

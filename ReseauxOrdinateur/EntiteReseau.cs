@@ -96,7 +96,7 @@ namespace ReseauxOrdinateur
 			} else if (primitive == N_DATA.req.ToString ()) {
 				int niec = Convert.ToInt32 (split [0]);
 				ConnexionReseau conn = connexions.findConnexionWithNIEC(niec);
-				PaquetDonnees paquet = new PaquetDonnees (niec, conn.pr, conn.ps, 0, split [1]);
+				PaquetDonnees paquet = new PaquetDonnees (niec, conn.pr, conn.ps, 0, split [2]);
 				Paquet reponse = liaison.TraiterPaquetDeReseau (paquet);
 				TraiterPaquetDeLiaison (reponse);
 			}
@@ -106,19 +106,28 @@ namespace ReseauxOrdinateur
         {
 			Console.WriteLine ("Réseau recoit de Liaison : " + paquet.ToPaquetString ());
 			ConnexionReseau conn;
-			if (paquet is PaquetConnexionEtablie) {
+			if (paquet is PaquetConnexionEtablie) {                     //Paquet de connexion établie
 				PaquetConnexionEtablie p = (PaquetConnexionEtablie)paquet;
 				conn = connexions.findConnexionWithNum (p.numero_connexion);
 				ecrire_vers_transport (conn.niec + ";" + N_CONNECT.conf + ";" + conn.adresseDestinataire);
-			} else if (paquet is PaquetIndicationLiberation) {
+			} else if (paquet is PaquetIndicationLiberation) {          //Paquet d'indication de libération
 				PaquetIndicationLiberation p = (PaquetIndicationLiberation)paquet;
 				conn = connexions.findConnexionWithNum(p.numero_connexion);
 				ecrire_vers_transport(conn.niec + ";" + N_DISCONNECT.ind + ";" + conn.adresseDestinataire);
-				break;
-			} else if (paquet is PaquetAcquittement) {
+			} else if (paquet is PaquetAcquittement) {                  //Paquet d'acquittement
 				PaquetAcquittement p = (PaquetAcquittement)paquet;
 				string pr = p.typePaquet.Substring (0, 3);
 				string type = p.typePaquet.Substring (3);
+                if (type == Constantes.TYPE_PAQUET_ACQUITTEMENT_POSITIF)    //Acquittement positif
+                {
+                    conn = connexions.findConnexionWithNum(paquet.numero_connexion);
+                    ecrire_vers_transport(conn.niec + ";" + N_DATA.ind + ";" + conn.adresseSource + ";" + conn.adresseDestinataire);
+                }
+                else                //Acquittement négatif
+                {
+                    //Tentative de renvoi du paquet
+
+                }
 			}
         }
     }

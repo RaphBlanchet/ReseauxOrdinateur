@@ -7,14 +7,14 @@ using System.Collections;
 
 namespace ReseauxOrdinateur
 {
-    public class Connexion{
+    public class ConnexionTransport{
 		public int numeroConnexion;
         public string identifiant;
         public int adresseSource;
         public int adresseDestinataire;
         public EtatConnexion etat;
 
-        public Connexion(int _num, string _identifiant, int _adresseSource, int _adresseDestinataire){
+        public ConnexionTransport(int _num, string _identifiant, int _adresseSource, int _adresseDestinataire){
 			numeroConnexion = _num;
             identifiant = _identifiant;
             adresseSource = _adresseSource;
@@ -23,25 +23,25 @@ namespace ReseauxOrdinateur
         }
     }
 
-    class TableConnexions
+    class TableConnexionTransport
     {
-        List<Connexion> listeConnexions;
+        List<ConnexionTransport> listeConnexions;
         bool[] adressesUtilises;
         int nbAdressesUtilises = 0;
 		static int nbConnexions = 0;
 
-        public TableConnexions()
+        public TableConnexionTransport()
         {
-            listeConnexions = new List<Connexion>();
+            listeConnexions = new List<ConnexionTransport>();
             adressesUtilises = new bool[250];
         }
 
-        public Connexion EtablirConnexion(string _identifiant)
+        public ConnexionTransport EtablirConnexion(string _identifiant)
         {
             int adresseSource = GenererAdresse();
             int adresseDestinataire = GenererAdresse();
 
-            Connexion conn = new Connexion(nbConnexions, _identifiant, adresseSource, adresseDestinataire);
+            ConnexionTransport conn = new ConnexionTransport(nbConnexions, _identifiant, adresseSource, adresseDestinataire);
             listeConnexions.Add(conn);
 			nbConnexions++;
 
@@ -79,7 +79,7 @@ namespace ReseauxOrdinateur
         }
 
 		public void FermerConnexion(int _numConn){
-			Connexion conn = this [_numConn];
+			ConnexionTransport conn = this [_numConn];
 			listeConnexions.Remove (conn);
 			Console.WriteLine ("Connexion fermée pour " + conn.identifiant);
 		}
@@ -88,14 +88,14 @@ namespace ReseauxOrdinateur
 			this.FermerConnexion (this [identifiant].numeroConnexion);
 		}
 
-        public Connexion this[int numConn]
+        public ConnexionTransport this[int numConn]
         {
             get
             {
-				Connexion conn = null ;
+				ConnexionTransport conn = null ;
 				for(int i = 0; i < listeConnexions.Count; i++){
 					try{
-						Connexion c = listeConnexions[i];
+						ConnexionTransport c = listeConnexions[i];
 						if (c.numeroConnexion == numConn)
 						{
 							conn = c;
@@ -109,14 +109,14 @@ namespace ReseauxOrdinateur
             }
         }
 
-        public Connexion this[String identifiant]
+        public ConnexionTransport this[String identifiant]
         {
             get
             {
-                Connexion conn = null ;
+                ConnexionTransport conn = null ;
 				for(int i = 0; i < listeConnexions.Count; i++){
 					try{
-						Connexion c = listeConnexions[i];
+						ConnexionTransport c = listeConnexions[i];
 	                    if (c.identifiant.Equals(identifiant))
 	                    {
 	                        conn = c;

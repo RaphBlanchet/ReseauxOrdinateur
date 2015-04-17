@@ -13,14 +13,14 @@ namespace ReseauxOrdinateur
     {
 		AnonymousPipeClientStream transportIn;
 		AnonymousPipeServerStream transportOut;
-        TableConnexions connexions;
+        TableConnexionTransport connexions;
         bool isRunning = true;
 
 		public EntiteTransport(AnonymousPipeClientStream _transportIn, AnonymousPipeServerStream _transportOut)
         {
 			transportIn = _transportIn;
 			transportOut = _transportOut;
-            connexions = new TableConnexions();
+            connexions = new TableConnexionTransport();
         }
 
         public void ThreadRun()
@@ -90,18 +90,29 @@ namespace ReseauxOrdinateur
                 {
 					if (connexions[identifiant] == null) {	//Si la connexion n'existe plus, on envoit rien
 						Console.Out.WriteLine("Impossible d'enovyer les données de " + identifiant + " - La connexion est fermée!");
-						break; 
-					}
-
-					//TimeSpan elapsed = new TimeSpan (DateTime.Now.Ticks - tempo.Ticks);
-                    //On attend la connexion
-					if (connexions [identifiant].etat == EtatConnexion.CONNECTE) {
-						EnvoyerDonnees (identifiant, lineSplit [1]);
 						break;
-					} /*else if (elapsed.Seconds > 5) {
-						connexions.FermerConnexion (identifiant);
-						break;
-					}*/
+                    }
+                    else
+                    {
+                        //TimeSpan elapsed = new TimeSpan (DateTime.Now.Ticks - tempo.Ticks);
+                        //On attend la connexion
+                        try
+                        {
+                            if (connexions[identifiant].etat == EtatConnexion.CONNECTE)
+                            {
+                                EnvoyerDonnees(identifiant, lineSplit[1]);
+                                break;
+                            } /*else if (elapsed.Seconds > 5) {
+						        connexions.FermerConnexion (identifiant);
+						        break;
+					        }*/
+                        }
+                        catch (NullReferenceException e)
+                        {
+                            Console.Out.WriteLine("Impossible d'enovyer les données de " + identifiant + " - La connexion est fermée!");
+                            break;
+                        }
+                    }
                 }
 
 				Thread.Sleep (1000);
@@ -110,7 +121,7 @@ namespace ReseauxOrdinateur
 
         public void EtablirConnexion(string _identifiant)
         {
-            Connexion conn = connexions.EtablirConnexion(_identifiant);
+            ConnexionTransport conn = connexions.EtablirConnexion(_identifiant);
 
             if (conn != null)
             {
@@ -128,6 +139,11 @@ namespace ReseauxOrdinateur
 				ecrire_vers_reseau (connexions[identifiant].numeroConnexion + ";" + N_DATA.req + ";" + donnees);
 			}
 		}
+
+        private void DemanderFermetureConnexions()
+        {
+
+        }
 
 		private void TraiterCommandeDeReseau(string commande){
             string[] split = commande.Split(';');
