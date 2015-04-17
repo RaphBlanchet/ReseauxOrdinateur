@@ -68,11 +68,10 @@ namespace ReseauxOrdinateur
 		string donnees;
 
 		public PaquetDonnees(int _num, int _pr, int _ps, int _m, string _donnees) : base(_num){
-			pR = _pr;
-			pS = _ps;
+			pR = _pr%8;
+			pS = _ps%8;
 			M = _m;
-			//typePaquet = string.Format ("{0:D3}{1:D}{2:D3}0", _pr%8, _ps%8, _m);
-			typePaquet = string.Format("{0:D3}{1:D}{0:D3}0", Convert.ToString(pR%8, 2), M, Convert.ToString(pS%8, 2));
+			typePaquet = string.Format("{0:D3}{1:D}{2:D3}0", Convert.ToString(pR, 2), M, Convert.ToString(pS, 2));
 			donnees = _donnees;
 		}
 
@@ -89,7 +88,7 @@ namespace ReseauxOrdinateur
 		public PaquetAcquittement(int _num, int _pr, bool _pos) : base(_num){
 			isPositif = _pos;
 			pR = _pr;
-			string acquittement = (isPositif ? Constantes.TYPE_PAQUET_ACQUITTEMENT_POSITIF : Constantes.TYPE_PAQUER_ACQUITTEMENT_NEGATIF);
+			string acquittement = (isPositif ? Constantes.TYPE_PAQUET_ACQUITTEMENT_POSITIF : Constantes.TYPE_PAQUET_ACQUITTEMENT_NEGATIF);
 			typePaquet = string.Format ("{0:D3}" + acquittement, Convert.ToString (pR, 2));
 		}
 

@@ -85,17 +85,26 @@ namespace ReseauxOrdinateur
                 }
 
                 //Envoi des données
+				DateTime tempo = DateTime.Now;
                 while (true)
                 {
-                    if (connexions[identifiant] == null) break; //Si la connexion n'existe plus, on envoit rien
+					if (connexions[identifiant] == null) {	//Si la connexion n'existe plus, on envoit rien
+						Console.Out.WriteLine("Impossible d'enovyer les données de " + identifiant + " - La connexion est fermée!");
+						break; 
+					}
 
+					//TimeSpan elapsed = new TimeSpan (DateTime.Now.Ticks - tempo.Ticks);
                     //On attend la connexion
-                    if (connexions[identifiant].etat == EtatConnexion.CONNECTE){
-                        EnvoyerDonnees(identifiant, lineSplit[1]);
-                        break;
-                    }
+					if (connexions [identifiant].etat == EtatConnexion.CONNECTE) {
+						EnvoyerDonnees (identifiant, lineSplit [1]);
+						break;
+					} /*else if (elapsed.Seconds > 5) {
+						connexions.FermerConnexion (identifiant);
+						break;
+					}*/
                 }
-				
+
+				Thread.Sleep (1000);
             }
         }
 
@@ -116,17 +125,18 @@ namespace ReseauxOrdinateur
 
 		private void EnvoyerDonnees(string identifiant, string donnees){
 			if (connexions [identifiant].etat == EtatConnexion.CONNECTE) {
-				ecrire_vers_reseau (identifiant + ";" + N_DATA.req + ";" + donnees);
+				ecrire_vers_reseau (connexions[identifiant].numeroConnexion + ";" + N_DATA.req + ";" + donnees);
 			}
 		}
 
 		private void TraiterCommandeDeReseau(string commande){
             string[] split = commande.Split(';');
 
-            if (split[1] == N_CONNECT.conf.ToString())
-            {
-                connexions.ConfirmerConnexion(Int32.Parse(split[0]));
-            }
+			if (split [1] == N_CONNECT.conf.ToString ()) {
+				connexions.ConfirmerConnexion (Int32.Parse (split [0]));
+			} else if (split [1] == N_DISCONNECT.ind.ToString ()) {
+				connexions.FermerConnexion (Int32.Parse (split [0]));
+			}
 		}
     }
 }

@@ -11,7 +11,7 @@ namespace ReseauxOrdinateur
 		public const string TYPE_PAQUET_CONNEXION_ETABLIE = "00001111";
 		public const string TYPE_PAQUET_LIBERATION = "00010011";
 		public const string TYPE_PAQUET_ACQUITTEMENT_POSITIF = "00001";
-		public const string TYPE_PAQUER_ACQUITTEMENT_NEGATIF = "01001";
+		public const string TYPE_PAQUET_ACQUITTEMENT_NEGATIF = "01001";
 
         public const string RAISON_REFUS_DISTANT = "00000001";
         public const string RAISON_REFUS_FOURNISSEUR = "00000010";

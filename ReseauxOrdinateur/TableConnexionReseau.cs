@@ -31,53 +31,52 @@ namespace ReseauxOrdinateur
 			listeConnexions = new List<ConnexionReseau> ();
 		}
 
-		public void EtablirConnexion(int addrSrouce, int addreDest, int niec){
+		public ConnexionReseau EtablirConnexion(int addrSrouce, int addreDest, int niec){
 			ConnexionReseau conn = new ConnexionReseau (nbConnexions, addrSrouce, addreDest, niec);
 			listeConnexions.Add (conn);
 			nbConnexions ++;
+			return conn;
 		}
 
 		public void RetirerConnexion(int niec){
-			ConnexionReseau conn = this [niec];
+			ConnexionReseau conn = this.findConnexionWithNIEC(niec);
 			listeConnexions.Remove (conn);
 		}
 
-		public void ModifierPS(int niec, int val){
-			this [niec].ps += val;
+		public void ModifierPS(int num, int val){
+			ConnexionReseau conn = this.findConnexionWithNum (num);
+			conn.ps = (conn.ps + val)%8;
 		}
 
-		public void ModifierPR(int niec, int val){
-			this [niec].pr += val;
+		public void ModifierPR(int num, int val){
+			ConnexionReseau conn = this.findConnexionWithNum (num);
+			conn.pr = (conn.pr + val)%8;
 		}
 
-		/*public ConnexionReseau this[int i]
-		{
-			get
-			{
-				return listeConnexions[i];
-			}
-
-			set
-			{
-				listeConnexions[i] = value;
-			}
-		}*/
-
-		public ConnexionReseau this[int niec]
-		{
-			get
-			{
-				ConnexionReseau conn = null ;
-				foreach(ConnexionReseau c in listeConnexions){
-					if (c.niec == niec)
-					{
-						conn = c;
-						break;
-					}
+		public ConnexionReseau findConnexionWithNIEC(int niec){
+			ConnexionReseau conn = null ;
+			foreach(ConnexionReseau c in listeConnexions){
+				if (c.niec == niec)
+				{
+					conn = c;
+					break;
 				}
-
-				return conn;
 			}
+
+			return conn;
+		}
+
+		public ConnexionReseau findConnexionWithNum(int num){
+			ConnexionReseau conn = null ;
+			foreach(ConnexionReseau c in listeConnexions){
+				if (c.numeroConnexion == num)
+				{
+					conn = c;
+					break;
+				}
+			}
+
+			return conn;
 		}
 	}
 }

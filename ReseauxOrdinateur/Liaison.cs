@@ -25,6 +25,7 @@ namespace ReseauxOrdinateur
                     }
                     else                      //ACCEPTATION DE LA CONNEXION
                     {
+						
                         reponse = new PaquetConnexionEtablie(p.numero_connexion, p.adresseSource, p.adresseDestination);
                     }
 

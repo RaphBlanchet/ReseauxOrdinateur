@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 
 namespace ReseauxOrdinateur
 {
-    //enum N_CONNECT { req="N_CONNECT.req", ind="N_CONNECT.ind", resp="N_CONNECT.resp", conf="N_CONNECT.conf"};
-    //enum N_DATA { req="N_DATA.req", ind="N_DATA.ind"};
-    //enum N_DISCONNECT { req="N_DISCONNECT.req", ind="N_DISCONNECT.ind"};
 
 	public abstract class Primitive{
 		private readonly String name;

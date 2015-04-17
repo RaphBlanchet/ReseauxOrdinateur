@@ -72,29 +72,38 @@ namespace ReseauxOrdinateur
             return adresse;
         }
 
-		public void ConfirmerConnexion(string _identifiant){
-			this [_identifiant].etat = EtatConnexion.CONNECTE;
-		}
-
         public void ConfirmerConnexion(int _numConn)
         {
             this[_numConn].etat = EtatConnexion.CONNECTE;
             Console.WriteLine("Connexion établie pour " + this[_numConn].identifiant);
         }
 
+		public void FermerConnexion(int _numConn){
+			Connexion conn = this [_numConn];
+			listeConnexions.Remove (conn);
+			Console.WriteLine ("Connexion fermée pour " + conn.identifiant);
+		}
+
+		public void FermerConnexion(string identifiant){
+			this.FermerConnexion (this [identifiant].numeroConnexion);
+		}
+
         public Connexion this[int numConn]
         {
             get
             {
-                Connexion conn = null;
-                foreach (Connexion c in listeConnexions)
-                {
-                    if (c.numeroConnexion == numConn)
-                    {
-                        conn = c;
-                        break;
-                    }
-                }
+				Connexion conn = null ;
+				for(int i = 0; i < listeConnexions.Count; i++){
+					try{
+						Connexion c = listeConnexions[i];
+						if (c.numeroConnexion == numConn)
+						{
+							conn = c;
+							break;
+						}
+					}catch(IndexOutOfRangeException e){
+					}
+				}
 
                 return conn;
             }
@@ -105,12 +114,16 @@ namespace ReseauxOrdinateur
             get
             {
                 Connexion conn = null ;
-                foreach(Connexion c in listeConnexions){
-                    if (c.identifiant.Equals(identifiant))
-                    {
-                        conn = c;
-                        break;
-                    }
+				for(int i = 0; i < listeConnexions.Count; i++){
+					try{
+						Connexion c = listeConnexions[i];
+	                    if (c.identifiant.Equals(identifiant))
+	                    {
+	                        conn = c;
+	                        break;
+	                    }
+					}catch(IndexOutOfRangeException e){
+					}
                 }
 
                 return conn;

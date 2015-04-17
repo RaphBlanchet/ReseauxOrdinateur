@@ -71,31 +71,55 @@ namespace ReseauxOrdinateur
             }
         }
 
-		private void traiterPrimitiveDeTransport(string strpaquet){
-			Console.WriteLine ("Reseau reçoit de transport : " + strpaquet);
-			string[] paq = strpaquet.Split (';');
+		private void traiterPrimitiveDeTransport(string strPrimitive){
+			Console.WriteLine ("Reseau reçoit de transport : " + strPrimitive);
+			string[] split = strPrimitive.Split (';');
+			string primitive = split [1];
 
-			if (paq [1] == N_CONNECT.req.ToString()) {
-                //Parametres : Adresse Source, Adresse Destination, NIEC
-                connexions.EtablirConnexion(Convert.ToInt32(paq[2]), Convert.ToInt32(paq[3]), Convert.ToInt32(paq[0]));
+			if (primitive == N_CONNECT.req.ToString ()) {
+				int addrSource = Convert.ToInt32(split[2]);
 
-                //Parametres : NIEC, Adresse Source, Adresse Destination
-                PaquetAppel paquet = new PaquetAppel(Convert.ToInt32(paq[0]), Convert.ToInt32(paq[2]), Convert.ToInt32(paq[3]));
-                Paquet reponse = liaison.TraiterPaquetDeReseau(paquet);
-                TraiterPaquetDeLiaison(reponse);
+				if (addrSource % 27 != 0) {				//Le fournisseur internet accepte la connexion
+					//Parametres : Adresse Source, Adresse Destination, NIEC
+					ConnexionReseau conn = connexions.EtablirConnexion (Convert.ToInt32 (split [2]), Convert.ToInt32 (split [3]), Convert.ToInt32 (split [0]));
+
+					//Parametres : NIEC, Adresse Source, Adresse Destination
+					PaquetAppel paquet = new PaquetAppel (conn.numeroConnexion, conn.adresseSource, conn.adresseDestinataire);
+					Paquet reponse = liaison.TraiterPaquetDeReseau (paquet);
+					TraiterPaquetDeLiaison (reponse);
+				} else {								//Le fournisseur internet refuse la connexion
+					ConnexionReseau conn = connexions.findConnexionWithNIEC(Convert.ToInt32(split[0]));
+					//Parametres : NIEC, Primitive, Adresse Source, Adresse Destination
+					ecrire_vers_transport(split[0] + ";" + N_DISCONNECT.ind + ";" + split[2] + ";" + split[3] + ";" + Constantes.RAISON_REFUS_FOURNISSEUR);
+				}
+
+			} else if (primitive == N_DATA.req.ToString ()) {
+				int niec = Convert.ToInt32 (split [0]);
+				ConnexionReseau conn = connexions.findConnexionWithNIEC(niec);
+				PaquetDonnees paquet = new PaquetDonnees (niec, conn.pr, conn.ps, 0, split [1]);
+				Paquet reponse = liaison.TraiterPaquetDeReseau (paquet);
+				TraiterPaquetDeLiaison (reponse);
 			}
 		}
 
         private void TraiterPaquetDeLiaison(Paquet paquet)
         {
-            switch (paquet.typePaquet)
-            {
-                case Constantes.TYPE_PAQUET_CONNEXION_ETABLIE:
-                    PaquetConnexionEtablie p = (PaquetConnexionEtablie)paquet;
-                    ConnexionReseau conn = connexions[p.numero_connexion];
-                    ecrire_vers_transport(conn.niec + ";" + N_CONNECT.conf + ";" + conn.adresseDestinataire);
-                    break;
-            }
+			Console.WriteLine ("Réseau recoit de Liaison : " + paquet.ToPaquetString ());
+			ConnexionReseau conn;
+			if (paquet is PaquetConnexionEtablie) {
+				PaquetConnexionEtablie p = (PaquetConnexionEtablie)paquet;
+				conn = connexions.findConnexionWithNum (p.numero_connexion);
+				ecrire_vers_transport (conn.niec + ";" + N_CONNECT.conf + ";" + conn.adresseDestinataire);
+			} else if (paquet is PaquetIndicationLiberation) {
+				PaquetIndicationLiberation p = (PaquetIndicationLiberation)paquet;
+				conn = connexions.findConnexionWithNum(p.numero_connexion);
+				ecrire_vers_transport(conn.niec + ";" + N_DISCONNECT.ind + ";" + conn.adresseDestinataire);
+				break;
+			} else if (paquet is PaquetAcquittement) {
+				PaquetAcquittement p = (PaquetAcquittement)paquet;
+				string pr = p.typePaquet.Substring (0, 3);
+				string type = p.typePaquet.Substring (3);
+			}
         }
     }
 }
