@@ -13,7 +13,7 @@ namespace ReseauxOrdinateur
         Liaison liaison;
 		AnonymousPipeClientStream reseauIn;
 		AnonymousPipeServerStream reseauOut;
-        bool isRunning = true;
+        public bool isRunning = true;
 		TableConnexionReseau connexions;
 
 		public EntiteReseau(AnonymousPipeClientStream _reseauIn, AnonymousPipeServerStream _reseauOut)
@@ -77,7 +77,7 @@ namespace ReseauxOrdinateur
 			string primitive = split [1];
 
 			if (primitive == N_CONNECT.req.ToString ()) {
-				int addrSource = Convert.ToInt32(split[2]);
+				int addrSource = Convert.ToInt32 (split [2]);
 
 				if (addrSource % 27 != 0) {				//Le fournisseur internet accepte la connexion
 					//Parametres : Adresse Source, Adresse Destination, NIEC
@@ -88,16 +88,25 @@ namespace ReseauxOrdinateur
 					Paquet reponse = liaison.TraiterPaquetDeReseau (paquet);
 					TraiterPaquetDeLiaison (reponse, paquet);
 				} else {								//Le fournisseur internet refuse la connexion
-					ConnexionReseau conn = connexions.findConnexionWithNIEC(Convert.ToInt32(split[0]));
+					ConnexionReseau conn = connexions.findConnexionWithNIEC (Convert.ToInt32 (split [0]));
 					//Parametres : NIEC, Primitive, Adresse Source, Adresse Destination
-					ecrire_vers_transport(split[0] + ";" + N_DISCONNECT.ind + ";" + split[2] + ";" + split[3] + ";" + Constantes.RAISON_REFUS_FOURNISSEUR);
+					ecrire_vers_transport (split [0] + ";" + N_DISCONNECT.ind + ";" + split [2] + ";" + split [3] + ";" + Constantes.RAISON_REFUS_FOURNISSEUR);
 				}
 
 			} else if (primitive == N_DATA.req.ToString ()) {
 				int niec = Convert.ToInt32 (split [0]);
-				Paquet paquet = construirePaquetDonnees (niec, split[2]);
+				Paquet paquet = construirePaquetDonnees (niec, split [2]);
 				Paquet reponse = liaison.TraiterPaquetDeReseau (paquet);
 				TraiterPaquetDeLiaison (reponse, paquet);
+
+			} else if (primitive == N_DISCONNECT.req.ToString ()) {
+				int niec = Convert.ToInt32 (split [0]);
+				ConnexionReseau conn = connexions.findConnexionWithNIEC (niec);
+				connexions.RetirerConnexion (conn);
+
+				//Construction du paquet pour libérer la connexion du coté liaison
+				PaquetDemandeLiberation paquet = new PaquetDemandeLiberation(conn.numeroConnexion, conn.adresseSource, conn.adresseDestinataire);
+				liaison.TraiterPaquetDeReseau (paquet);
 			}
 		}
 
@@ -127,6 +136,7 @@ namespace ReseauxOrdinateur
 					{
 						conn = connexions.findConnexionWithNum(reponse.numero_connexion);
 						ecrire_vers_transport(conn.niec + ";" + N_DATA.ind + ";" + conn.adresseSource + ";" + conn.adresseDestinataire);
+						Utility.EcrireDansFichier ("S_ecr.txt", ((PaquetDonnees)origin).donnees, true);
 					}
 					else                //Acquittement négatif - On tente de renvoyer le paquet
 					{

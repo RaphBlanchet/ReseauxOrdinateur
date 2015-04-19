@@ -11,6 +11,10 @@ namespace ReseauxOrdinateur
 			listeConnexions = new List<ConnexionLiaison>();
 		}
 
+		public int nbConnexions{
+			get{ return listeConnexions.Count; }
+		}
+
 		public ConnexionLiaison AjouterConnexion(int _no, int _adrSource, int _adrDestination){
 			ConnexionLiaison conn = new ConnexionLiaison (_no, _adrSource, _adrDestination);
 			listeConnexions.Add (conn);

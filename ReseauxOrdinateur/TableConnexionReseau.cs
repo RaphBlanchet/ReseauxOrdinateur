@@ -24,17 +24,21 @@ namespace ReseauxOrdinateur
 	{
 		
 		List<ConnexionReseau> listeConnexions;
-		static int nbConnexions = 0;
+		static int connexionsTotales = 0;
 
 		public TableConnexionReseau ()
 		{
 			listeConnexions = new List<ConnexionReseau> ();
 		}
 
+		public int nbConnexions{
+			get{ return listeConnexions.Count; }
+		}
+
 		public ConnexionReseau EtablirConnexion(int addrSrouce, int addreDest, int niec){
-			ConnexionReseau conn = new ConnexionReseau (nbConnexions, addrSrouce, addreDest, niec);
+			ConnexionReseau conn = new ConnexionReseau (connexionsTotales, addrSrouce, addreDest, niec);
 			listeConnexions.Add (conn);
-			nbConnexions ++;
+			connexionsTotales ++;
 			return conn;
 		}
 
@@ -61,7 +65,6 @@ namespace ReseauxOrdinateur
 					break;
 				}
 			}
-
 			return conn;
 		}
 
@@ -74,7 +77,6 @@ namespace ReseauxOrdinateur
 					break;
 				}
 			}
-
 			return conn;
 		}
 	}

@@ -34,6 +34,11 @@ namespace ReseauxOrdinateur
 		{
 			return numero_connexion + ";" + typePaquet + ";" + adresseSource + ";" + adresseDestination;
 		}
+
+		public override string ToString ()
+		{
+			return "Numéro connexion : " + numero_connexion + " | Type Paquet : " + typePaquet + " | Adresse Source : " + adresseSource + " | Adresse Destination : " + adresseDestination;
+		}
     }
 
     class PaquetAppel : PaquetConnexion		//Classe d'initialisation des champs
@@ -41,12 +46,22 @@ namespace ReseauxOrdinateur
 		public PaquetAppel(int _num, int _addrSource, int _addrDestination) : base(_num, _addrSource, _addrDestination){
 			typePaquet = Constantes.TYPE_PAQUET_APPEL;
 		}
+
+		public override string ToString ()
+		{
+			return "Paquet : Appel | " + base.ToString ();
+		}
     }
 
     class PaquetConnexionEtablie : PaquetConnexion
     {
 		public PaquetConnexionEtablie(int _num, int _addrSource, int _addrDestination) : base(_num, _addrSource, _addrDestination){
 			typePaquet = Constantes.TYPE_PAQUET_CONNEXION_ETABLIE;
+		}
+
+		public override string ToString ()
+		{
+			return "Paquet : ConnexionEtablie | " + base.ToString ();
 		}
     }
 
@@ -60,6 +75,22 @@ namespace ReseauxOrdinateur
 		public override string ToPaquetString ()
 		{
 			return base.ToPaquetString () + ";" + raison;
+		}
+
+		public override string ToString ()
+		{
+			return "Paquet : IndicationLiberation | " + base.ToString ();
+		}
+	}
+
+	class PaquetDemandeLiberation : PaquetConnexion{
+		public PaquetDemandeLiberation(int _num, int _addrSource, int _addrDestination) : base(_num, _addrSource, _addrDestination){
+			typePaquet = Constantes.TYPE_PAQUET_LIBERATION;
+		}
+
+		public override string ToString ()
+		{
+			return "Paquet : DemandeLiberation | " + base.ToString ();
 		}
 	}
 
@@ -80,6 +111,11 @@ namespace ReseauxOrdinateur
 		{
 			return numero_connexion + ";" + typePaquet + ";" + donnees;
 		}
+
+		public override string ToString ()
+		{
+			return "Paquet : Donnees | Numero Connexion : " + numero_connexion + " | P(R) : " + pR + " | P(S) : " + pS + " | M : " + M + " | Données : " + donnees;
+		}
 	}
 
 	class PaquetAcquittement : Paquet{
@@ -98,11 +134,10 @@ namespace ReseauxOrdinateur
 		{
 			return numero_connexion + ";" + typePaquet;
 		}
-	}
 
-	class PaquetDemandeLiberation : PaquetConnexion{
-		public PaquetDemandeLiberation(int _num, int _addrSource, int _addrDestination) : base(_num, _addrSource, _addrDestination){
-			typePaquet = Constantes.TYPE_PAQUET_LIBERATION;
+		public override string ToString ()
+		{
+			return "Paquet : Acquittement | Numéro Connexion : " + numero_connexion + " | P(R) : " + pR + " | Type Paquet : " + typePaquet;
 		}
 	}
 }

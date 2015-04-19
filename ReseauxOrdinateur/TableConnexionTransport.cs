@@ -28,7 +28,7 @@ namespace ReseauxOrdinateur
         List<ConnexionTransport> listeConnexions;
         bool[] adressesUtilises;
         int nbAdressesUtilises = 0;
-		static int nbConnexions = 0;
+		static int nbConnexionsTotales = 0;
 
         public TableConnexionTransport()
         {
@@ -36,14 +36,18 @@ namespace ReseauxOrdinateur
             adressesUtilises = new bool[250];
         }
 
+		public int nbConnexions{
+			get{ return listeConnexions.Count; }
+		}
+
         public ConnexionTransport EtablirConnexion(string _identifiant)
         {
             int adresseSource = GenererAdresse();
             int adresseDestinataire = GenererAdresse();
 
-            ConnexionTransport conn = new ConnexionTransport(nbConnexions, _identifiant, adresseSource, adresseDestinataire);
+            ConnexionTransport conn = new ConnexionTransport(nbConnexionsTotales, _identifiant, adresseSource, adresseDestinataire);
             listeConnexions.Add(conn);
-			nbConnexions++;
+			nbConnexionsTotales++;
 
             return conn;
         }
@@ -81,11 +85,16 @@ namespace ReseauxOrdinateur
 		public void FermerConnexion(int _numConn){
 			ConnexionTransport conn = this [_numConn];
 			listeConnexions.Remove (conn);
-			Console.WriteLine ("Connexion fermée pour " + conn.identifiant);
+			Console.WriteLine ("Fermeture de connexion pour " + conn.identifiant);
+			Utility.EcrireDansFichier ("S_ecr.txt", "Fermeture de connexion pour " + conn.identifiant, true);
 		}
 
 		public void FermerConnexion(string identifiant){
 			this.FermerConnexion (this [identifiant].numeroConnexion);
+		}
+
+		public ConnexionTransport findConnexionAtIndex(int i){
+			return listeConnexions [i];
 		}
 
         public ConnexionTransport this[int numConn]

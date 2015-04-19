@@ -14,7 +14,7 @@ namespace ReseauxOrdinateur
 		AnonymousPipeClientStream transportIn;
 		AnonymousPipeServerStream transportOut;
         TableConnexionTransport connexions;
-        bool isRunning = true;
+        public bool isRunning = true;
 
 		public EntiteTransport(AnonymousPipeClientStream _transportIn, AnonymousPipeServerStream _transportOut)
         {
@@ -140,9 +140,13 @@ namespace ReseauxOrdinateur
 			}
 		}
 
-        private void DemanderFermetureConnexions()
+        public void DemanderFermetureConnexions()
         {
-
+			while (connexions.nbConnexions > 0) {
+				ConnexionTransport conn = connexions.findConnexionAtIndex (0);
+				ecrire_vers_reseau (conn.numeroConnexion + ";" + N_DISCONNECT.req + ";" + conn.adresseDestinataire);
+				connexions.FermerConnexion (conn.numeroConnexion);
+			}
         }
 
 		private void TraiterCommandeDeReseau(string commande){
@@ -151,6 +155,7 @@ namespace ReseauxOrdinateur
 			if (split [1] == N_CONNECT.conf.ToString ()) {
 				connexions.ConfirmerConnexion (Int32.Parse (split [0]));
 			} else if (split [1] == N_DISCONNECT.ind.ToString ()) {
+				ConnexionTransport conn = connexions [Convert.ToInt32 (split [0])];
 				connexions.FermerConnexion (Int32.Parse (split [0]));
 			}
 		}

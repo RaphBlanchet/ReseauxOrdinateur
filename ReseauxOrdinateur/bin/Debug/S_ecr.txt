@@ -1,0 +1,8 @@
+Envoie de donnees par Messenger
+Envoie de donnees par un Fureteur Internet
+Envoie de donnees par Skype
+Fermeture de connexion pour VLC
+Envoie d'un message tres long par Messenger, tellement long qu'il devra sans doute etre segmenter, ou peut-etre pas, il devra etre encore plus long que ca
+Fermeture de connexion pour MSG
+Fermeture de connexion pour INT
+Fermeture de connexion pour SKY
