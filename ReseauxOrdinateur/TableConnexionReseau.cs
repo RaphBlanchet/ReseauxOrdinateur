@@ -38,8 +38,7 @@ namespace ReseauxOrdinateur
 			return conn;
 		}
 
-		public void RetirerConnexion(int niec){
-			ConnexionReseau conn = this.findConnexionWithNIEC(niec);
+		public void RetirerConnexion(ConnexionReseau conn){
 			listeConnexions.Remove (conn);
 		}
 

@@ -32,9 +32,14 @@ namespace ReseauxOrdinateur
             }
             else if (paquet is PaquetDonnees)               //Paquet de données
             {
-                PaquetDonnees p = (PaquetDonnees)paquet;
-                Console.WriteLine("Donnees recues : " + p.donnees);
-                reponse = new PaquetAcquittement(p.numero_connexion, p.pR, true);
+				ConnexionLiaison conn = connexions.findConnexion (paquet.numero_connexion);
+				if (conn.adresseSource % 15 == 0) {
+					reponse = null; //Pas de reponse
+				} else {
+					PaquetDonnees p = (PaquetDonnees)paquet;
+					Console.WriteLine("Donnees recues : " + p.donnees);
+					reponse = new PaquetAcquittement(p.numero_connexion, p.pR, true);
+				}
             }
             else if (paquet is PaquetDemandeLiberation)     //Paquet Demande Liberation
             {

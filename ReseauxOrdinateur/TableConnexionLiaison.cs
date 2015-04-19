@@ -18,16 +18,30 @@ namespace ReseauxOrdinateur
 		}
 
 		public void RetirerConnexion(int _no){
-			
+			ConnexionLiaison conn = findConnexion(_no);
+			listeConnexions.Remove (conn);
+		}
+
+		public ConnexionLiaison findConnexion(int _no){
+			ConnexionLiaison conn = null ;
+			foreach(ConnexionLiaison c in listeConnexions){
+				if (c.numeroConnexion == _no)
+				{
+					conn = c;
+					break;
+				}
+			}
+
+			return conn;
 		}
 
 	}
 
 	public class ConnexionLiaison
 	{
-		int numeroConnexion;
-		int adresseSource;
-		int adresseDestination;
+		public int numeroConnexion;
+		public int adresseSource;
+		public int adresseDestination;
 
 		public ConnexionLiaison(int _num, int _adrSource, int _adrDestination){
 			numeroConnexion = _num;

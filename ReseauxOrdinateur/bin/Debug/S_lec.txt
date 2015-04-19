@@ -2,4 +2,4 @@ MSG;Envoie de donnees par Messenger
 INT;Envoie de donnees par un Fureteur Internet
 SKY;Envoie de donnees par Skype
 VLC;Envoie de donnees par VLC
-MSG;Envoie d'un message tres long par Messenger, tellement long qu'il devra sans doute etre segmenter, ou peut-etre pas, il devra encore etre plus long que ca
+MSG;Envoie d'un message tres long par Messenger, tellement long qu'il devra sans doute etre segmenter, ou peut-etre pas, il devra etre encore plus long que ca

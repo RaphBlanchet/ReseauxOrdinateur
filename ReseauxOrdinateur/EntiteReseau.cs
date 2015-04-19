@@ -86,7 +86,7 @@ namespace ReseauxOrdinateur
 					//Parametres : NIEC, Adresse Source, Adresse Destination
 					PaquetAppel paquet = new PaquetAppel (conn.numeroConnexion, conn.adresseSource, conn.adresseDestinataire);
 					Paquet reponse = liaison.TraiterPaquetDeReseau (paquet);
-					TraiterPaquetDeLiaison (reponse);
+					TraiterPaquetDeLiaison (reponse, paquet);
 				} else {								//Le fournisseur internet refuse la connexion
 					ConnexionReseau conn = connexions.findConnexionWithNIEC(Convert.ToInt32(split[0]));
 					//Parametres : NIEC, Primitive, Adresse Source, Adresse Destination
@@ -95,40 +95,68 @@ namespace ReseauxOrdinateur
 
 			} else if (primitive == N_DATA.req.ToString ()) {
 				int niec = Convert.ToInt32 (split [0]);
-				ConnexionReseau conn = connexions.findConnexionWithNIEC(niec);
-				PaquetDonnees paquet = new PaquetDonnees (niec, conn.pr, conn.ps, 0, split [2]);
+				Paquet paquet = construirePaquetDonnees (niec, split[2]);
 				Paquet reponse = liaison.TraiterPaquetDeReseau (paquet);
-				TraiterPaquetDeLiaison (reponse);
+				TraiterPaquetDeLiaison (reponse, paquet);
 			}
 		}
 
-        private void TraiterPaquetDeLiaison(Paquet paquet)
-        {
-			Console.WriteLine ("Réseau recoit de Liaison : " + paquet.ToPaquetString ());
-			ConnexionReseau conn;
-			if (paquet is PaquetConnexionEtablie) {                     //Paquet de connexion établie
-				PaquetConnexionEtablie p = (PaquetConnexionEtablie)paquet;
-				conn = connexions.findConnexionWithNum (p.numero_connexion);
-				ecrire_vers_transport (conn.niec + ";" + N_CONNECT.conf + ";" + conn.adresseDestinataire);
-			} else if (paquet is PaquetIndicationLiberation) {          //Paquet d'indication de libération
-				PaquetIndicationLiberation p = (PaquetIndicationLiberation)paquet;
-				conn = connexions.findConnexionWithNum(p.numero_connexion);
-				ecrire_vers_transport(conn.niec + ";" + N_DISCONNECT.ind + ";" + conn.adresseDestinataire);
-			} else if (paquet is PaquetAcquittement) {                  //Paquet d'acquittement
-				PaquetAcquittement p = (PaquetAcquittement)paquet;
-				string pr = p.typePaquet.Substring (0, 3);
-				string type = p.typePaquet.Substring (3);
-                if (type == Constantes.TYPE_PAQUET_ACQUITTEMENT_POSITIF)    //Acquittement positif
-                {
-                    conn = connexions.findConnexionWithNum(paquet.numero_connexion);
-                    ecrire_vers_transport(conn.niec + ";" + N_DATA.ind + ";" + conn.adresseSource + ";" + conn.adresseDestinataire);
-                }
-                else                //Acquittement négatif
-                {
-                    //Tentative de renvoi du paquet
-
-                }
+		private void TraiterPaquetDeLiaison(Paquet reponse, Paquet origin)
+		{
+			if (reponse == null) {		//Aucune réponse... Tentative de renvoi
+				Console.WriteLine("*Réseau : Aucune réponse de la couche liaison, tentative de renvoi...*");
+				reponse = liaison.TraiterPaquetDeReseau (origin);
+				if (reponse == null) {
+					deconnecterVoieLogique (origin.numero_connexion);
+				}
+			} else {
+				Console.WriteLine ("Réseau recoit de Liaison : " + reponse.ToPaquetString ());
+				ConnexionReseau conn;
+				if (reponse is PaquetConnexionEtablie) {                     //Paquet de connexion établie
+					PaquetConnexionEtablie p = (PaquetConnexionEtablie)reponse;
+					conn = connexions.findConnexionWithNum (p.numero_connexion);
+					ecrire_vers_transport (conn.niec + ";" + N_CONNECT.conf + ";" + conn.adresseDestinataire);
+				} else if (reponse is PaquetIndicationLiberation) {          //Paquet d'indication de libération
+					PaquetIndicationLiberation p = (PaquetIndicationLiberation)reponse;
+					conn = connexions.findConnexionWithNum(p.numero_connexion);
+					ecrire_vers_transport(conn.niec + ";" + N_DISCONNECT.ind + ";" + conn.adresseDestinataire);
+				} else if (reponse is PaquetAcquittement) {                  //Paquet d'acquittement
+					PaquetAcquittement p = (PaquetAcquittement)reponse;
+					string type = p.typePaquet.Substring (1);
+					if (type == Constantes.TYPE_PAQUET_ACQUITTEMENT_POSITIF)    //Acquittement positif
+					{
+						conn = connexions.findConnexionWithNum(reponse.numero_connexion);
+						ecrire_vers_transport(conn.niec + ";" + N_DATA.ind + ";" + conn.adresseSource + ";" + conn.adresseDestinataire);
+					}
+					else                //Acquittement négatif - On tente de renvoyer le paquet
+					{
+						//Tentative de renvoi du paquet
+						Console.WriteLine("*Réseau : Acquittement négatif de Liaison - Tentative de renvoi*");
+						PaquetDonnees o = (PaquetDonnees) origin;
+						PaquetAcquittement p_rep = (PaquetAcquittement)liaison.TraiterPaquetDeReseau (o);
+						type = p.typePaquet.Substring (1);
+						if (type == Constantes.TYPE_PAQUET_ACQUITTEMENT_NEGATIF) {
+							deconnecterVoieLogique (p.numero_connexion);
+						}
+					}
+				}
 			}
+
         }
+
+		private Paquet construirePaquetDonnees(int niec, String donnees){
+			ConnexionReseau conn = connexions.findConnexionWithNIEC(niec);
+			PaquetDonnees paquet = new PaquetDonnees (niec, conn.pr, conn.ps, 0, donnees);
+			return paquet;
+		}
+
+		private void deconnecterVoieLogique(int no_conn){
+			ConnexionReseau conn = connexions.findConnexionWithNum (no_conn);
+			connexions.RetirerConnexion (conn);
+			int addrSource = conn.adresseSource;
+			int addrDestination = conn.adresseDestinataire;
+			Console.WriteLine ("*Réseau : Aucune réponse de la couche liaison - Déconnexion de " + conn.niec + "*");
+			ecrire_vers_transport (conn.niec + ";" + N_DISCONNECT.ind + ";" + addrSource + ";" + addrDestination);
+		}
     }
 }
