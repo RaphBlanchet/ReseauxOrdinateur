@@ -1,8 +1,11 @@
-Paquet : ConnexionEtablie | Numéro connexion : 0 | Type Paquet : 00001111 | Adresse Source : 207 | Adresse Destination : 47
-Paquet : Acquittement | Numéro Connexion : 0 | P(R) : 0 | Type Paquet : 000001
-Paquet : ConnexionEtablie | Numéro connexion : 1 | Type Paquet : 00001111 | Adresse Source : 191 | Adresse Destination : 245
-Paquet : Acquittement | Numéro Connexion : 1 | P(R) : 0 | Type Paquet : 000001
-Paquet : ConnexionEtablie | Numéro connexion : 2 | Type Paquet : 00001111 | Adresse Source : 126 | Adresse Destination : 73
-Paquet : Acquittement | Numéro Connexion : 2 | P(R) : 0 | Type Paquet : 000001
-Paquet : ConnexionEtablie | Numéro connexion : 3 | Type Paquet : 00001111 | Adresse Source : 150 | Adresse Destination : 182
-Paquet : Acquittement | Numéro Connexion : 0 | P(R) : 0 | Type Paquet : 000001
+Paquet : ConnexionEtablie | Numéro connexion : 0 | Type Paquet : 00001111 | Adresse Source : 227 | Adresse Destination : 90
+Paquet : Acquittement | Numéro Connexion : 0 | P(R) : 1 | Type Paquet : 100001
+Paquet : ConnexionEtablie | Numéro connexion : 1 | Type Paquet : 00001111 | Adresse Source : 132 | Adresse Destination : 219
+Paquet : Acquittement | Numéro Connexion : 1 | P(R) : 1 | Type Paquet : 100001
+Paquet : IndicationLiberation | Numéro connexion : 2 | Type Paquet : 00010011 | Adresse Source : 78 | Adresse Destination : 247
+Paquet : ConnexionEtablie | Numéro connexion : 3 | Type Paquet : 00001111 | Adresse Source : 192 | Adresse Destination : 226
+Paquet : Acquittement | Numéro Connexion : 3 | P(R) : 1 | Type Paquet : 100001
+Paquet : Acquittement | Numéro Connexion : 0 | P(R) : 2 | Type Paquet : 200001
+Paquet : Acquittement | Numéro Connexion : 0 | P(R) : 3 | Type Paquet : 300001
+Paquet : ConnexionEtablie | Numéro connexion : 4 | Type Paquet : 00001111 | Adresse Source : 43 | Adresse Destination : 133
+Paquet : Acquittement | Numéro Connexion : 4 | P(R) : 1 | Type Paquet : 100001

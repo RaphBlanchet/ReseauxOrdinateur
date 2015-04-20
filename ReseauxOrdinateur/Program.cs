@@ -46,15 +46,11 @@ namespace ReseauxOrdinateur
 			ET.isRunning = false;
 			ER.isRunning = false;
 
-			Console.WriteLine ("Exécution terminée!");
+            t_ET.Abort();
+            t_ER.Abort();
+
+			Console.WriteLine ("\nExécution terminée! Appuyez sur Enter pour terminer...");
 			Console.Read ();
-
-			//Thread.Sleep(10000);
-
-			//t_ER.Abort();
-			//t_ET.Abort();
-
-			//Console.Read();
 		}
 	}
 }

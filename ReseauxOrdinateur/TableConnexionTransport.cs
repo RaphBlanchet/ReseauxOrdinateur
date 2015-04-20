@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
+using System.Threading;
 
 namespace ReseauxOrdinateur
 {
@@ -29,6 +30,7 @@ namespace ReseauxOrdinateur
         bool[] adressesUtilises;
         int nbAdressesUtilises = 0;
 		static int nbConnexionsTotales = 0;
+        static Semaphore sem = new Semaphore(1, 3);
 
         public TableConnexionTransport()
         {
@@ -45,9 +47,11 @@ namespace ReseauxOrdinateur
             int adresseSource = GenererAdresse();
             int adresseDestinataire = GenererAdresse();
 
+            sem.WaitOne();
             ConnexionTransport conn = new ConnexionTransport(nbConnexionsTotales, _identifiant, adresseSource, adresseDestinataire);
             listeConnexions.Add(conn);
 			nbConnexionsTotales++;
+            sem.Release();
 
             return conn;
         }
@@ -78,19 +82,23 @@ namespace ReseauxOrdinateur
 
         public void ConfirmerConnexion(int _numConn)
         {
-            this[_numConn].etat = EtatConnexion.CONNECTE;
-            Console.WriteLine("Connexion établie pour " + this[_numConn].identifiant);
+            ConnexionTransport conn = this[_numConn];
+            conn.etat = EtatConnexion.CONNECTE;
+            Console.WriteLine("Connexion établie pour " + conn.identifiant);
+            Utility.EcrireDansFichier("S_ecr.txt", "Connexion établie pour " + conn.identifiant, true);
         }
 
-		public void FermerConnexion(int _numConn){
+		public void FermerConnexion(int _numConn, String raison){
 			ConnexionTransport conn = this [_numConn];
+            sem.WaitOne();
 			listeConnexions.Remove (conn);
+            sem.Release();
 			Console.WriteLine ("Fermeture de connexion pour " + conn.identifiant);
-			Utility.EcrireDansFichier ("S_ecr.txt", "Fermeture de connexion pour " + conn.identifiant, true);
+			Utility.EcrireDansFichier ("S_ecr.txt", "Fermeture de connexion pour " + conn.identifiant + " - " + raison, true);
 		}
 
-		public void FermerConnexion(string identifiant){
-			this.FermerConnexion (this [identifiant].numeroConnexion);
+		public void FermerConnexion(string identifiant, String raison){
+			this.FermerConnexion (this [identifiant].numeroConnexion, raison);
 		}
 
 		public ConnexionTransport findConnexionAtIndex(int i){
@@ -102,6 +110,7 @@ namespace ReseauxOrdinateur
             get
             {
 				ConnexionTransport conn = null ;
+                sem.WaitOne();
 				for(int i = 0; i < listeConnexions.Count; i++){
 					try{
 						ConnexionTransport c = listeConnexions[i];
@@ -111,8 +120,10 @@ namespace ReseauxOrdinateur
 							break;
 						}
 					}catch(IndexOutOfRangeException e){
+                        break;
 					}
 				}
+                sem.Release();
 
                 return conn;
             }
@@ -123,6 +134,7 @@ namespace ReseauxOrdinateur
             get
             {
                 ConnexionTransport conn = null ;
+                sem.WaitOne();
 				for(int i = 0; i < listeConnexions.Count; i++){
 					try{
 						ConnexionTransport c = listeConnexions[i];
@@ -132,8 +144,10 @@ namespace ReseauxOrdinateur
 	                        break;
 	                    }
 					}catch(IndexOutOfRangeException e){
+                        break;
 					}
                 }
+                sem.Release();
 
                 return conn;
             }

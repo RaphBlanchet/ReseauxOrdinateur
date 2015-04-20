@@ -1,10 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 
 namespace ReseauxOrdinateur
 {
 	static public class Utility
 	{
+        static private Semaphore sem = new Semaphore(1, 1);
 		static byte[] GetBytes(string str)
 		{
 			byte[] bytes = new byte[str.Length * sizeof(char)];
@@ -20,9 +22,11 @@ namespace ReseauxOrdinateur
 		}
 
 		public static void EcrireDansFichier(string path, string str, bool append){
+            sem.WaitOne();
 			StreamWriter sw = new StreamWriter (path, append);
 			sw.WriteLine (str);
 			sw.Close ();
+            sem.Release();
 		}
 		public static void SupprimerFichier(string path){
 			if (File.Exists (path)) {

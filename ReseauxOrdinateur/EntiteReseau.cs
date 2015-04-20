@@ -63,7 +63,6 @@ namespace ReseauxOrdinateur
                 byte[] bytes = Encoding.UTF8.GetBytes(str);
 
                 reseauOut.Write(bytes, 0, str.Length);
-
             }
             catch (IOException e)
             {
@@ -90,16 +89,25 @@ namespace ReseauxOrdinateur
 				} else {								//Le fournisseur internet refuse la connexion
 					ConnexionReseau conn = connexions.findConnexionWithNIEC (Convert.ToInt32 (split [0]));
 					//Parametres : NIEC, Primitive, Adresse Source, Adresse Destination
-					ecrire_vers_transport (split [0] + ";" + N_DISCONNECT.ind + ";" + split [2] + ";" + split [3] + ";" + Constantes.RAISON_REFUS_FOURNISSEUR);
+					ecrire_vers_transport (split [0] + ";" + N_DISCONNECT.ind + ";" + split [3] + ";" + Constantes.RAISON_REFUS_FOURNISSEUR);
 				}
 
-			} else if (primitive == N_DATA.req.ToString ()) {
+			} else if (primitive == N_DATA.req.ToString ()) {               //ENVOI DE DONNÉES
 				int niec = Convert.ToInt32 (split [0]);
-				Paquet paquet = construirePaquetDonnees (niec, split [2]);
-				Paquet reponse = liaison.TraiterPaquetDeReseau (paquet);
-				TraiterPaquetDeLiaison (reponse, paquet);
-
-			} else if (primitive == N_DISCONNECT.req.ToString ()) {
+                String donnees = split[2];
+                ConnexionReseau conn;
+                while (donnees.Length > 0 && (conn = connexions.findConnexionWithNIEC(niec)) != null)
+                {
+                    int count = Math.Min(donnees.Length, 128);
+                    String data = donnees.Substring(0, count);
+                    donnees = donnees.Remove(0, count);
+                    int m = (data.Length == 128 ? 1 : 0);
+                    PaquetDonnees paquet = new PaquetDonnees(niec, conn.pr, conn.ps, m, data);
+                    Paquet reponse = liaison.TraiterPaquetDeReseau(paquet);
+                    connexions.ModifierPS(conn.numeroConnexion, 1);
+                    TraiterPaquetDeLiaison(reponse, paquet);
+                }
+			} else if (primitive == N_DISCONNECT.req.ToString ()) {         //DÉCONNEXION
 				int niec = Convert.ToInt32 (split [0]);
 				ConnexionReseau conn = connexions.findConnexionWithNIEC (niec);
 				connexions.RetirerConnexion (conn);
@@ -116,37 +124,36 @@ namespace ReseauxOrdinateur
 				Console.WriteLine("*Réseau : Aucune réponse de la couche liaison, tentative de renvoi...*");
 				reponse = liaison.TraiterPaquetDeReseau (origin);
 				if (reponse == null) {
-					deconnecterVoieLogique (origin.numero_connexion);
+					deconnecterVoieLogique (origin.numero_connexion, "Aucune reponse du distant");
 				}
 			} else {
 				Console.WriteLine ("Réseau recoit de Liaison : " + reponse.ToPaquetString ());
 				ConnexionReseau conn;
-				if (reponse is PaquetConnexionEtablie) {                     //Paquet de connexion établie
+				if (reponse is PaquetConnexionEtablie) {                        //Paquet de connexion établie
 					PaquetConnexionEtablie p = (PaquetConnexionEtablie)reponse;
 					conn = connexions.findConnexionWithNum (p.numero_connexion);
 					ecrire_vers_transport (conn.niec + ";" + N_CONNECT.conf + ";" + conn.adresseDestinataire);
-				} else if (reponse is PaquetIndicationLiberation) {          //Paquet d'indication de libération
+				} else if (reponse is PaquetIndicationLiberation) {             //Paquet d'indication de libération
 					PaquetIndicationLiberation p = (PaquetIndicationLiberation)reponse;
 					conn = connexions.findConnexionWithNum(p.numero_connexion);
-					ecrire_vers_transport(conn.niec + ";" + N_DISCONNECT.ind + ";" + conn.adresseDestinataire);
-				} else if (reponse is PaquetAcquittement) {                  //Paquet d'acquittement
+					ecrire_vers_transport(conn.niec + ";" + N_DISCONNECT.ind + ";" + conn.adresseDestinataire + ";" + p.raison);
+				} else if (reponse is PaquetAcquittement) {                     //Paquet d'acquittement
 					PaquetAcquittement p = (PaquetAcquittement)reponse;
 					string type = p.typePaquet.Substring (1);
 					if (type == Constantes.TYPE_PAQUET_ACQUITTEMENT_POSITIF)    //Acquittement positif
 					{
 						conn = connexions.findConnexionWithNum(reponse.numero_connexion);
 						ecrire_vers_transport(conn.niec + ";" + N_DATA.ind + ";" + conn.adresseSource + ";" + conn.adresseDestinataire);
-						Utility.EcrireDansFichier ("S_ecr.txt", ((PaquetDonnees)origin).donnees, true);
+                        connexions.ModifierPR(reponse.numero_connexion, 1);
 					}
-					else                //Acquittement négatif - On tente de renvoyer le paquet
+					else                                                        //Acquittement négatif - On tente de renvoyer le paquet
 					{
 						//Tentative de renvoi du paquet
 						Console.WriteLine("*Réseau : Acquittement négatif de Liaison - Tentative de renvoi*");
-						PaquetDonnees o = (PaquetDonnees) origin;
-						PaquetAcquittement p_rep = (PaquetAcquittement)liaison.TraiterPaquetDeReseau (o);
-						type = p.typePaquet.Substring (1);
+						PaquetAcquittement p_rep = (PaquetAcquittement)liaison.TraiterPaquetDeReseau (origin);
+						type = p_rep.typePaquet.Substring (1);
 						if (type == Constantes.TYPE_PAQUET_ACQUITTEMENT_NEGATIF) {
-							deconnecterVoieLogique (p.numero_connexion);
+							deconnecterVoieLogique (p_rep.numero_connexion, "Acquittement negatif");
 						}
 					}
 				}
@@ -154,19 +161,12 @@ namespace ReseauxOrdinateur
 
         }
 
-		private Paquet construirePaquetDonnees(int niec, String donnees){
-			ConnexionReseau conn = connexions.findConnexionWithNIEC(niec);
-			PaquetDonnees paquet = new PaquetDonnees (niec, conn.pr, conn.ps, 0, donnees);
-			return paquet;
-		}
-
-		private void deconnecterVoieLogique(int no_conn){
+		private void deconnecterVoieLogique(int no_conn, String raison){
 			ConnexionReseau conn = connexions.findConnexionWithNum (no_conn);
 			connexions.RetirerConnexion (conn);
-			int addrSource = conn.adresseSource;
 			int addrDestination = conn.adresseDestinataire;
-			Console.WriteLine ("*Réseau : Aucune réponse de la couche liaison - Déconnexion de " + conn.niec + "*");
-			ecrire_vers_transport (conn.niec + ";" + N_DISCONNECT.ind + ";" + addrSource + ";" + addrDestination);
+			Console.WriteLine ("*Réseau : Aucune réponse du distant - Déconnexion de " + conn.niec + "*");
+			ecrire_vers_transport (conn.niec + ";" + N_DISCONNECT.ind + ";" + addrDestination + ";" + raison);
 		}
     }
 }

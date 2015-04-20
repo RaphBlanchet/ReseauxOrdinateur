@@ -66,7 +66,7 @@ namespace ReseauxOrdinateur
     }
 
 	class PaquetIndicationLiberation : PaquetConnexion{
-		string raison;
+		public string raison;
 		public PaquetIndicationLiberation(int _num, int _addrSource, int _addrDestination, string _raison) : base(_num, _addrSource, _addrDestination){
 			typePaquet = Constantes.TYPE_PAQUET_LIBERATION;
 			raison = _raison;

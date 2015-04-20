@@ -13,8 +13,8 @@ namespace ReseauxOrdinateur
 		public const string TYPE_PAQUET_ACQUITTEMENT_POSITIF = "00001";
 		public const string TYPE_PAQUET_ACQUITTEMENT_NEGATIF = "01001";
 
-        public const string RAISON_REFUS_DISTANT = "00000001";
-        public const string RAISON_REFUS_FOURNISSEUR = "00000010";
+        public const string RAISON_REFUS_DISTANT = "Refus du distant";
+        public const string RAISON_REFUS_FOURNISSEUR = "Refus du fournisseur";
         public const string RAISON_REFUS_DECONNEXION = "00000100";
 	}
 }

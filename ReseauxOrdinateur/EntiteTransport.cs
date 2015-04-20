@@ -94,7 +94,7 @@ namespace ReseauxOrdinateur
                     }
                     else
                     {
-                        //TimeSpan elapsed = new TimeSpan (DateTime.Now.Ticks - tempo.Ticks);
+                        TimeSpan elapsed = new TimeSpan (DateTime.Now.Ticks - tempo.Ticks);
                         //On attend la connexion
                         try
                         {
@@ -102,10 +102,10 @@ namespace ReseauxOrdinateur
                             {
                                 EnvoyerDonnees(identifiant, lineSplit[1]);
                                 break;
-                            } /*else if (elapsed.Seconds > 5) {
-						        connexions.FermerConnexion (identifiant);
+                            }else if (elapsed.Seconds > 2) {
+						        connexions.FermerConnexion (identifiant, "Délai de connexion expiré");
 						        break;
-					        }*/
+					        }
                         }
                         catch (NullReferenceException e)
                         {
@@ -130,6 +130,7 @@ namespace ReseauxOrdinateur
                 int addrDestinataire = conn.adresseDestinataire;
 
 				//PaquetAppel paquet = new PaquetAppel (numeroConnexion, addrSource, addrDestinataire);
+                Utility.EcrireDansFichier("S_ecr.txt", "Ouverture de connexion pour " + _identifiant + "...", true);
 				ecrire_vers_reseau (numConn + ";" + N_CONNECT.req + ";" + addrSource + ";" + addrDestinataire);
             }
         }
@@ -145,18 +146,19 @@ namespace ReseauxOrdinateur
 			while (connexions.nbConnexions > 0) {
 				ConnexionTransport conn = connexions.findConnexionAtIndex (0);
 				ecrire_vers_reseau (conn.numeroConnexion + ";" + N_DISCONNECT.req + ";" + conn.adresseDestinataire);
-				connexions.FermerConnexion (conn.numeroConnexion);
+				connexions.FermerConnexion (conn.numeroConnexion, "Fin d'exécution");
 			}
         }
 
 		private void TraiterCommandeDeReseau(string commande){
             string[] split = commande.Split(';');
+            int numeroConnexion = Int32.Parse (split [0]);
+            ConnexionTransport conn = connexions[numeroConnexion];
 
 			if (split [1] == N_CONNECT.conf.ToString ()) {
-				connexions.ConfirmerConnexion (Int32.Parse (split [0]));
+				connexions.ConfirmerConnexion (numeroConnexion);
 			} else if (split [1] == N_DISCONNECT.ind.ToString ()) {
-				ConnexionTransport conn = connexions [Convert.ToInt32 (split [0])];
-				connexions.FermerConnexion (Int32.Parse (split [0]));
+				connexions.FermerConnexion (numeroConnexion, split[3]);
 			}
 		}
     }
