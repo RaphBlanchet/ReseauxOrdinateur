@@ -93,7 +93,7 @@ namespace ReseauxOrdinateur
             sem.WaitOne();
 			listeConnexions.Remove (conn);
             sem.Release();
-			Console.WriteLine ("Fermeture de connexion pour " + conn.identifiant);
+			Console.WriteLine ("Fermeture de connexion pour " + conn.identifiant + " - " + raison);
 			Utility.EcrireDansFichier ("S_ecr.txt", "Fermeture de connexion pour " + conn.identifiant + " - " + raison, true);
 		}
 

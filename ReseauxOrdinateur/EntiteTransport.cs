@@ -114,8 +114,6 @@ namespace ReseauxOrdinateur
                         }
                     }
                 }
-
-				Thread.Sleep (1000);
             }
         }
 

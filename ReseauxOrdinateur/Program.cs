@@ -39,10 +39,11 @@ namespace ReseauxOrdinateur
 
 			ET.lireCommandes ();
 
+			Thread.Sleep (1000);
 			Console.WriteLine ("Plus de commandes, fermeture des connexions...");
 			ET.DemanderFermetureConnexions ();
 
-			Thread.Sleep (500);
+			Thread.Sleep (1000);
 			ET.isRunning = false;
 			ER.isRunning = false;
 
