@@ -16,6 +16,12 @@ namespace ReseauxOrdinateur
         public const string RAISON_REFUS_DISTANT = "Refus du distant";
         public const string RAISON_REFUS_FOURNISSEUR = "Refus du fournisseur";
         public const string RAISON_REFUS_DECONNEXION = "00000100";
+
+		public const ConsoleColor TRANSPORT_RESEAU_COLOR = ConsoleColor.Magenta;
+		public const ConsoleColor RESEAU_LIAISON_COLOR = ConsoleColor.DarkGreen;
+		public const ConsoleColor INPUT_COLOR = ConsoleColor.Yellow;
+		public const ConsoleColor OUTPUT_COLOR = ConsoleColor.Gray;
+		public const ConsoleColor ERREUR_COLOR = ConsoleColor.Red;
 	}
 }
 

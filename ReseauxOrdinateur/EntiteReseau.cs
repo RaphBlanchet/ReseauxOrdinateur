@@ -55,7 +55,7 @@ namespace ReseauxOrdinateur
 		public void ecrire_vers_transport(string str)
         {
 
-            Console.Out.WriteLine("Reseau vers Transport : " + str);
+			Utility.AfficherDansConsole("Reseau vers Transport : " + str, Constantes.TRANSPORT_RESEAU_COLOR);
             str += Constantes.FIN_PAQUET;
 
             try
@@ -71,7 +71,7 @@ namespace ReseauxOrdinateur
         }
 
 		private void traiterPrimitiveDeTransport(string strPrimitive){
-			Console.WriteLine ("Reseau reçoit de transport : " + strPrimitive);
+			Utility.AfficherDansConsole("Reseau reçoit de transport : " + strPrimitive, Constantes.TRANSPORT_RESEAU_COLOR);
 			string[] split = strPrimitive.Split (';');
 			string primitive = split [1];
 
@@ -121,13 +121,13 @@ namespace ReseauxOrdinateur
 		private void TraiterPaquetDeLiaison(Paquet reponse, Paquet origin)
 		{
 			if (reponse == null) {		//Aucune réponse... Tentative de renvoi
-				Console.WriteLine("*Réseau : Aucune réponse de la couche liaison, tentative de renvoi...*");
+				Utility.AfficherDansConsole("*Réseau : Aucune réponse de la couche liaison, tentative de renvoi...*", Constantes.ERREUR_COLOR);
 				reponse = liaison.TraiterPaquetDeReseau (origin);
 				if (reponse == null) {
 					deconnecterVoieLogique (origin.numero_connexion, "Aucune reponse du distant");
 				}
 			} else {
-				Console.WriteLine ("Réseau recoit de Liaison : " + reponse.ToPaquetString ());
+				Utility.AfficherDansConsole("Réseau recoit de Liaison : " + reponse.ToPaquetString (), Constantes.RESEAU_LIAISON_COLOR);
 				ConnexionReseau conn;
 				if (reponse is PaquetConnexionEtablie) {                        //Paquet de connexion établie
 					PaquetConnexionEtablie p = (PaquetConnexionEtablie)reponse;
@@ -149,7 +149,7 @@ namespace ReseauxOrdinateur
 					else                                                        //Acquittement négatif - On tente de renvoyer le paquet
 					{
 						//Tentative de renvoi du paquet
-						Console.WriteLine("*Réseau : Acquittement négatif de Liaison - Tentative de renvoi*");
+						Utility.AfficherDansConsole("*Réseau : Acquittement négatif de Liaison - Tentative de renvoi*", Constantes.ERREUR_COLOR);
 						PaquetAcquittement p_rep = (PaquetAcquittement)liaison.TraiterPaquetDeReseau (origin);
 						type = p_rep.typePaquet.Substring (1);
 						if (type == Constantes.TYPE_PAQUET_ACQUITTEMENT_NEGATIF) {
@@ -165,7 +165,7 @@ namespace ReseauxOrdinateur
 			ConnexionReseau conn = connexions.findConnexionWithNum (no_conn);
 			connexions.RetirerConnexion (conn);
 			int addrDestination = conn.adresseDestinataire;
-			Console.WriteLine ("*Réseau : Aucune réponse du distant - Déconnexion de " + conn.niec + "*");
+			Utility.AfficherDansConsole("*Réseau : Aucune réponse du distant - Déconnexion de " + conn.niec + "*", Constantes.ERREUR_COLOR);
 			ecrire_vers_transport (conn.niec + ";" + N_DISCONNECT.ind + ";" + addrDestination + ";" + raison);
 		}
     }

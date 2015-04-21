@@ -40,7 +40,8 @@ namespace ReseauxOrdinateur
 			ET.lireCommandes ();
 
 			Thread.Sleep (1000);
-			Console.WriteLine ("Plus de commandes, fermeture des connexions...");
+
+			Utility.AfficherDansConsole ("Plus de commandes, fermeture des connexions...", Constantes.OUTPUT_COLOR);
 			ET.DemanderFermetureConnexions ();
 
 			Thread.Sleep (1000);
@@ -50,7 +51,7 @@ namespace ReseauxOrdinateur
             t_ET.Abort();
             t_ER.Abort();
 
-			Console.WriteLine ("\nExécution terminée! Appuyez sur Enter pour terminer...");
+			Utility.AfficherDansConsole("\nExécution terminée! Appuyez sur Enter pour terminer...", Constantes.OUTPUT_COLOR);
 			Console.Read ();
 		}
 	}

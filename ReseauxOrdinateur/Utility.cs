@@ -6,7 +6,9 @@ namespace ReseauxOrdinateur
 {
 	static public class Utility
 	{
-        static private Semaphore sem = new Semaphore(1, 1);
+		static private Semaphore file_sem = new Semaphore(1, 1);
+		static private Semaphore console_sem = new Semaphore(1, 1);
+
 		static byte[] GetBytes(string str)
 		{
 			byte[] bytes = new byte[str.Length * sizeof(char)];
@@ -21,12 +23,20 @@ namespace ReseauxOrdinateur
 			return new string(chars);
 		}
 
+		public static void AfficherDansConsole(string str, ConsoleColor color){
+			console_sem.WaitOne ();
+			Console.ForegroundColor = color;
+			Console.WriteLine (str);
+			Console.ResetColor ();
+			console_sem.Release ();
+		}
+
 		public static void EcrireDansFichier(string path, string str, bool append){
-            sem.WaitOne();
+            file_sem.WaitOne();
 			StreamWriter sw = new StreamWriter (path, append);
 			sw.WriteLine (str);
 			sw.Close ();
-            sem.Release();
+            file_sem.Release();
 		}
 		public static void SupprimerFichier(string path){
 			if (File.Exists (path)) {

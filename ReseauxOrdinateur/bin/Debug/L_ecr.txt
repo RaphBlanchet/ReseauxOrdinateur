@@ -1,15 +1,14 @@
-Paquet : Appel | Numéro connexion : 0 | Type Paquet : 00001011 | Adresse Source : 171 | Adresse Destination : 152
-Paquet : Appel | Numéro connexion : 0 | Type Paquet : 00001011 | Adresse Source : 171 | Adresse Destination : 152
-Paquet : Appel | Numéro connexion : 1 | Type Paquet : 00001011 | Adresse Source : 59 | Adresse Destination : 99
+Paquet : Appel | Numéro connexion : 0 | Type Paquet : 00001011 | Adresse Source : 71 | Adresse Destination : 133
+Paquet : Donnees | Numero Connexion : 0 | P(R) : 0 | P(S) : 0 | M : 0 | Données : Envoie de donnees par Messenger
+Paquet : Appel | Numéro connexion : 1 | Type Paquet : 00001011 | Adresse Source : 217 | Adresse Destination : 205
 Paquet : Donnees | Numero Connexion : 1 | P(R) : 0 | P(S) : 0 | M : 0 | Données : Envoie de donnees par un Fureteur Internet
-Paquet : Appel | Numéro connexion : 2 | Type Paquet : 00001011 | Adresse Source : 198 | Adresse Destination : 47
+Paquet : Appel | Numéro connexion : 2 | Type Paquet : 00001011 | Adresse Source : 146 | Adresse Destination : 52
 Paquet : Donnees | Numero Connexion : 2 | P(R) : 0 | P(S) : 0 | M : 0 | Données : Envoie de donnees par Skype
-Paquet : Appel | Numéro connexion : 3 | Type Paquet : 00001011 | Adresse Source : 246 | Adresse Destination : 71
+Paquet : Appel | Numéro connexion : 3 | Type Paquet : 00001011 | Adresse Source : 105 | Adresse Destination : 153
 Paquet : Donnees | Numero Connexion : 3 | P(R) : 0 | P(S) : 0 | M : 0 | Données : Envoie de donnees par VLC
-Paquet : Appel | Numéro connexion : 4 | Type Paquet : 00001011 | Adresse Source : 206 | Adresse Destination : 6
-Paquet : Donnees | Numero Connexion : 4 | P(R) : 0 | P(S) : 0 | M : 1 | Données : Envoie d'un message tres long par Messenger, tellement long qu'il devra sans doute etre segmenter, ou peut-etre pas, il devra et
-Paquet : Donnees | Numero Connexion : 4 | P(R) : 1 | P(S) : 1 | M : 0 | Données : re encore plus long que ca
-Paquet : Appel | Numéro connexion : 5 | Type Paquet : 00001011 | Adresse Source : 45 | Adresse Destination : 95
-Paquet : Donnees | Numero Connexion : 5 | P(R) : 0 | P(S) : 0 | M : 0 | Données : Envoie d'un courriel par l'application systeme Courriel
-Paquet : Donnees | Numero Connexion : 5 | P(R) : 0 | P(S) : 0 | M : 0 | Données : Envoie d'un courriel par l'application systeme Courriel
-Paquet : DemandeLiberation | Numéro connexion : 1 | Type Paquet : 00010011 | Adresse Source : 59 | Adresse Destination : 99
+Paquet : Donnees | Numero Connexion : 3 | P(R) : 0 | P(S) : 0 | M : 0 | Données : Envoie de donnees par VLC
+Paquet : Donnees | Numero Connexion : 0 | P(R) : 1 | P(S) : 1 | M : 1 | Données : Envoie d'un message tres long par Messenger, tellement long qu'il devra sans doute etre segmenter, ou peut-etre pas, il devra et
+Paquet : Donnees | Numero Connexion : 0 | P(R) : 2 | P(S) : 2 | M : 0 | Données : re encore plus long que ca
+Paquet : Appel | Numéro connexion : 4 | Type Paquet : 00001011 | Adresse Source : 154 | Adresse Destination : 177
+Paquet : Donnees | Numero Connexion : 4 | P(R) : 0 | P(S) : 0 | M : 0 | Données : Envoie d'un courriel par l'application systeme Courriel
+Paquet : DemandeLiberation | Numéro connexion : 0 | Type Paquet : 00010011 | Adresse Source : 71 | Adresse Destination : 133

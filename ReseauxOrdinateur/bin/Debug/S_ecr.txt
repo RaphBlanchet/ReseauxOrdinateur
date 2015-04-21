@@ -1,6 +1,7 @@
 Ouverture de connexion pour MSG...
+Connexion établie pour MSG
 Ouverture de connexion pour INT...
-Fermeture de connexion pour MSG - Aucune reponse du distant
+Envoie de donnees par Messenger
 Connexion établie pour INT
 Ouverture de connexion pour SKY...
 Envoie de donnees par un Fureteur Internet
@@ -8,14 +9,12 @@ Connexion établie pour SKY
 Ouverture de connexion pour VLC...
 Envoie de donnees par Skype
 Connexion établie pour VLC
-Ouverture de connexion pour MSG...
-Envoie de donnees par VLC
-Connexion établie pour MSG
 Ouverture de connexion pour COU...
+Fermeture de connexion pour VLC - Aucune reponse du distant
 Envoie d'un message tres long par Messenger, tellement long qu'il devra sans doute etre segmenter, ou peut-etre pas, il devra etre encore plus long que ca
 Connexion établie pour COU
-Fermeture de connexion pour COU - Aucune reponse du distant
+Envoie d'un courriel par l'application systeme Courriel
+Fermeture de connexion pour MSG - Fin d'exécution
 Fermeture de connexion pour INT - Fin d'exécution
 Fermeture de connexion pour SKY - Fin d'exécution
-Fermeture de connexion pour VLC - Fin d'exécution
-Fermeture de connexion pour MSG - Fin d'exécution
+Fermeture de connexion pour COU - Fin d'exécution

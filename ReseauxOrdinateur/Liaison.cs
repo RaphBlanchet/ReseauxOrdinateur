@@ -14,7 +14,7 @@ namespace ReseauxOrdinateur
 
         public Paquet TraiterPaquetDeReseau(Paquet paquet)
         {
-            Console.WriteLine("Liaison recoit de réseau : " + paquet.ToPaquetString());
+			Utility.AfficherDansConsole("Liaison recoit de réseau : " + paquet.ToPaquetString(), Constantes.RESEAU_LIAISON_COLOR);
 			Utility.EcrireDansFichier ("L_ecr.txt", paquet.ToString (), true);
 
             Paquet reponse = null;
@@ -43,7 +43,7 @@ namespace ReseauxOrdinateur
 				} else if(p.pS == rdm){				        //Acquittement négatif
 					reponse = new PaquetAcquittement(p.numero_connexion, p.pR, false);
 				}else{								        //Acquittement positif
-					Console.WriteLine("Donnees recues : " + p.donnees);
+					Utility.AfficherDansConsole("Donnees recues : " + p.donnees, Constantes.OUTPUT_COLOR);
 					reponse = new PaquetAcquittement(p.numero_connexion, p.pR+1, true);
 
                     //Écriture dans le fichier

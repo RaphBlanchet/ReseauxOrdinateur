@@ -54,7 +54,7 @@ namespace ReseauxOrdinateur
 
 		public void ecrire_vers_reseau(string str)
         {
-            Console.Out.WriteLine("Transport vers Reseau : " + str);
+			Utility.AfficherDansConsole("Transport vers Reseau : " + str, Constantes.TRANSPORT_RESEAU_COLOR);
 			str += Constantes.FIN_PAQUET;
 
 			try{
@@ -78,7 +78,7 @@ namespace ReseauxOrdinateur
                 string identifiant = lineSplit[0];
 
                 //On vérifie si la connexion n'est pas déjà établie
-                Console.WriteLine("\nLecture de S_Lec : " + line);
+				Utility.AfficherDansConsole("\nLecture de S_Lec : " + line, Constantes.INPUT_COLOR);
                 if (!connexions.ContientConnexion(identifiant))
                 {
                     EtablirConnexion(identifiant);
@@ -89,7 +89,7 @@ namespace ReseauxOrdinateur
                 while (true)
                 {
 					if (connexions[identifiant] == null) {	//Si la connexion n'existe plus, on envoit rien
-						Console.Out.WriteLine("Impossible d'enovyer les données de " + identifiant + " - La connexion est fermée!");
+						Utility.AfficherDansConsole("Impossible d'enovyer les données de " + identifiant + " - La connexion est fermée!", Constantes.ERREUR_COLOR);
 						break;
                     }
                     else
@@ -109,7 +109,7 @@ namespace ReseauxOrdinateur
                         }
                         catch (NullReferenceException e)
                         {
-                            Console.Out.WriteLine("Impossible d'enovyer les données de " + identifiant + " - La connexion est fermée!");
+							Utility.AfficherDansConsole("Impossible d'enovyer les données de " + identifiant + " - La connexion est fermée!", Constantes.ERREUR_COLOR);
                             break;
                         }
                     }

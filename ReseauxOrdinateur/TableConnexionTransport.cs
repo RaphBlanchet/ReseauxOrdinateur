@@ -84,7 +84,7 @@ namespace ReseauxOrdinateur
         {
             ConnexionTransport conn = this[_numConn];
             conn.etat = EtatConnexion.CONNECTE;
-            Console.WriteLine("Connexion établie pour " + conn.identifiant);
+			Utility.AfficherDansConsole("Connexion établie pour " + conn.identifiant, Constantes.OUTPUT_COLOR);
             Utility.EcrireDansFichier("S_ecr.txt", "Connexion établie pour " + conn.identifiant, true);
         }
 
@@ -93,7 +93,7 @@ namespace ReseauxOrdinateur
             sem.WaitOne();
 			listeConnexions.Remove (conn);
             sem.Release();
-			Console.WriteLine ("Fermeture de connexion pour " + conn.identifiant + " - " + raison);
+			Utility.AfficherDansConsole("Fermeture de connexion pour " + conn.identifiant + " - " + raison, Constantes.OUTPUT_COLOR);
 			Utility.EcrireDansFichier ("S_ecr.txt", "Fermeture de connexion pour " + conn.identifiant + " - " + raison, true);
 		}
 
