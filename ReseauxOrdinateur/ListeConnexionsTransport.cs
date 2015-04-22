@@ -1,4 +1,9 @@
-﻿using System;
+﻿/*	ListeConnexionsTransport.cs
+ * 	Par Raphaël Blanchet, Catherine Béliveau, Joel Gbalou, Sébastien Piché Aubin et Marfous Lawani
+ * 	Créé le 1er Avril 2015
+ * 	Classe permettant de gérer les différentes connexions de la couche Transport
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,109 +13,142 @@ using System.Threading;
 
 namespace ReseauxOrdinateur
 {
+	//Classe représentant une connexion gérée par la couche Transport
     public class ConnexionTransport{
-		public int numeroConnexion;
-        public string identifiant;
-        public int adresseSource;
-        public int adresseDestinataire;
-        public EtatConnexion etat;
+		public int numeroConnexion;			//Numéro de connexion
+		public string identifiant;			//Identificateur de l'application (ex. MSG)
+        public int adresseSource;			//Adresse source de la connexion
+        public int adresseDestination;		//Adresse destination de la connexion
+        public EtatConnexion etat;			//État en cours de la connexion
 
+		//Constructeur de la classe ConnexionTransport
         public ConnexionTransport(int _num, string _identifiant, int _adresseSource, int _adresseDestinataire){
 			numeroConnexion = _num;
             identifiant = _identifiant;
             adresseSource = _adresseSource;
-            adresseDestinataire = _adresseDestinataire;
+            adresseDestination = _adresseDestinataire;
 			etat = EtatConnexion.ATTENTE_ETABLISSEMENT;
         }
     }
 
-    class TableConnexionTransport
+	//Classe contenant la liste des connexions de Transport
+    class ListeConnexionsTransport
     {
-        List<ConnexionTransport> listeConnexions;
-        bool[] adressesUtilises;
-        int nbAdressesUtilises = 0;
-		static int nbConnexionsTotales = 0;
-        static Semaphore sem = new Semaphore(1, 3);
+        List<ConnexionTransport> listeConnexions;		//Table contenant les connexions de Transport
+        bool[] adressesUtilises;						//Table contenant les adresses déjà utilisées, empêchant de générer les mêmes
+        int nbAdressesUtilises = 0;						//Nombre d'adresses utilisées
+		static int nbConnexionsTotales = 0;				//Nombre de connexions totales générées depuis le début du programme
+        static Semaphore sem = new Semaphore(1, 1);		//Sémaphore permettant le blocage de la modification de la liste de connexions
 
-        public TableConnexionTransport()
+		//Constructeur de la classe ListeConnexionsTransport
+        public ListeConnexionsTransport()
         {
             listeConnexions = new List<ConnexionTransport>();
             adressesUtilises = new bool[250];
         }
 
+		//Accesseur du nombre de connexions dans la table listeConnexions
 		public int nbConnexions{
 			get{ return listeConnexions.Count; }
 		}
 
+		//Fonction permettant d'établir une nouvelle connexion
         public ConnexionTransport EtablirConnexion(string _identifiant)
         {
+			//On génère deux adresses
             int adresseSource = GenererAdresse();
             int adresseDestinataire = GenererAdresse();
 
-            sem.WaitOne();
+			//Plus d'adresses disponibles
+			if (adresseSource == -1 || adresseDestinataire == -1) {
+				Utility.AfficherDansConsole ("Plus d'adresses disponibles! Impossible d'établir la connexion.", Constantes.ERREUR_COLOR);
+				return null;
+			}
+
+            sem.WaitOne();	//Blocage
             ConnexionTransport conn = new ConnexionTransport(nbConnexionsTotales, _identifiant, adresseSource, adresseDestinataire);
             listeConnexions.Add(conn);
 			nbConnexionsTotales++;
-            sem.Release();
+            sem.Release();	//Déblocage
 
             return conn;
         }
 
+		//Fonction permettant de déterminer si la table contient une connexion selon l'identifiant passée en paramètre
         public bool ContientConnexion(string _identifiant)
         {
             return (this[_identifiant] != null);
         }
         
+		//Fonction permettant de générer une adresse aléatoire
         public int GenererAdresse()
         {
+			//Plus d'adresses disponibles
             if (nbAdressesUtilises >= 250)
                 return -1;
 
             Random rand = new Random();
             int adresse = 0;
 
+			//Génération d'une adresse aléatoire unique
             do
             {
                 adresse = rand.Next(250);
             } while (adressesUtilises[adresse] == true);
 
+			//On notifie que l'adresse est maintenant utilisée
             adressesUtilises[adresse] = true;
             nbAdressesUtilises++;
 
             return adresse;
         }
 
+		//Fonction permettant de confirmer une connexion
         public void ConfirmerConnexion(int _numConn)
         {
             ConnexionTransport conn = this[_numConn];
             conn.etat = EtatConnexion.CONNECTE;
+
+			//Affichage en console et écriture dans le fichier de sortie
 			Utility.AfficherDansConsole("Connexion établie pour " + conn.identifiant, Constantes.OUTPUT_COLOR);
             Utility.EcrireDansFichier("S_ecr.txt", "Connexion établie pour " + conn.identifiant, true);
         }
 
+		//Fermeture d'une connexion selon son numéro de connexion
 		public void FermerConnexion(int _numConn, String raison){
 			ConnexionTransport conn = this [_numConn];
-            sem.WaitOne();
+            sem.WaitOne();	//Blocage
 			listeConnexions.Remove (conn);
-            sem.Release();
+
+			//Libération des adresses utilisées
+			adressesUtilises [conn.adresseSource] = false;
+			adressesUtilises [conn.adresseDestination] = false;
+			nbAdressesUtilises -= 2;
+
+            sem.Release();	//Déblocage
+
+			//Affichage en console et écriture dans le fichier de sortie
 			Utility.AfficherDansConsole("Fermeture de connexion pour " + conn.identifiant + " - " + raison, Constantes.OUTPUT_COLOR);
 			Utility.EcrireDansFichier ("S_ecr.txt", "Fermeture de connexion pour " + conn.identifiant + " - " + raison, true);
 		}
 
+		//Fonction permettant de fermer une connexion selon on identifiant d'application
 		public void FermerConnexion(string identifiant, String raison){
 			this.FermerConnexion (this [identifiant].numeroConnexion, raison);
 		}
 
+		//Fonction permettant de trouver une connexion selon son index dans la liste
 		public ConnexionTransport findConnexionAtIndex(int i){
 			return listeConnexions [i];
 		}
 
+		//Fonction permettant de trouver une connexion selon son numéro de connexion
         public ConnexionTransport this[int numConn]
         {
             get
             {
 				ConnexionTransport conn = null ;
-                sem.WaitOne();
+                sem.WaitOne();	//Blocage
 				for(int i = 0; i < listeConnexions.Count; i++){
 					try{
 						ConnexionTransport c = listeConnexions[i];
@@ -123,18 +161,19 @@ namespace ReseauxOrdinateur
                         break;
 					}
 				}
-                sem.Release();
+                sem.Release();	//Déblocage
 
                 return conn;
             }
         }
 
+		//Fonction permettant de trouver une connexion selon son identifiant d'application
         public ConnexionTransport this[String identifiant]
         {
             get
             {
                 ConnexionTransport conn = null ;
-                sem.WaitOne();
+                sem.WaitOne();	//Blocage
 				for(int i = 0; i < listeConnexions.Count; i++){
 					try{
 						ConnexionTransport c = listeConnexions[i];
@@ -147,7 +186,7 @@ namespace ReseauxOrdinateur
                         break;
 					}
                 }
-                sem.Release();
+                sem.Release();	//Déblocage
 
                 return conn;
             }
