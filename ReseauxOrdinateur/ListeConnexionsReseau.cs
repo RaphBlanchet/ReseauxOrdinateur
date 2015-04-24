@@ -12,23 +12,54 @@ namespace ReseauxOrdinateur
 {
 	//Classe représentant une connexion gérée par la couche Reseau
 	public class ConnexionReseau{
-        public int numeroConnexion;			//Numéro de voie logique
-        public int adresseSource;			//Adresse source
-        public int adresseDestinataire;		//Adresse destination
-		public int niec;					//Numéro d'Identification d'Extremité de Connexion
-		public int pr;						//P(R)
-		public int ps;						//P(S)
+        private int numeroConnexion;			//Numéro de voie logique
+		private int adresseSource;			//Adresse source
+		private int adresseDestination;		//Adresse destination
+		private int niec;					//Numéro d'Identification d'Extremité de Connexion
+		private int pr;						//P(R)
+		private int ps;						//P(S)
 
 		//Constructeur de la classe ConnexionReseau
 		public ConnexionReseau(int _num, int _adresseSource, int _adresseDestinataire, int _niec){
             numeroConnexion = _num;
             adresseSource = _adresseSource;
-            adresseDestinataire = _adresseDestinataire;
+            adresseDestination = _adresseDestinataire;
 			niec = _niec;
 			pr = 0;
 			ps = 0;
 		}
 
+		public int getNumeroConnexion(){
+			return numeroConnexion;
+		}
+
+		public int getAdresseSource(){
+			return adresseSource;
+		}
+
+		public int getAdresseDestination(){
+			return adresseDestination;
+		}
+
+		public int getNIEC(){
+			return niec;
+		}
+
+		public int getPR(){
+			return pr;
+		}
+
+		public void setPR(int val){
+			this.pr = val;
+		}
+
+		public int getPS(){
+			return ps;
+		}
+
+		public void setPS(int val){
+			this.ps = val;
+		}
 	}
 
 	//Classe contenant la liste des connexions de Reseau
@@ -70,13 +101,13 @@ namespace ReseauxOrdinateur
 		//Fonction permettant de modifier le P(S) d'une connexion
 		public void ModifierPS(int num, int val){
 			ConnexionReseau conn = this.findConnexionWithNum (num);
-			conn.ps = (conn.ps + val)%8;
+			conn.setPS((conn.getPS() + val)%8);
 		}
 
 		//Fonction permettant de modifier le P(R) d'une connexion
 		public void ModifierPR(int num, int val){
 			ConnexionReseau conn = this.findConnexionWithNum (num);
-			conn.pr = (conn.pr + val)%8;
+			conn.setPR((conn.getPR() + val)%8);
 		}
 
 		//Fontion permettant de retrouver une connexion avec le NIEC correspondant
@@ -84,7 +115,7 @@ namespace ReseauxOrdinateur
 			ConnexionReseau conn = null ;
             sem.WaitOne();	//Blocage
 			foreach(ConnexionReseau c in listeConnexions){
-				if (c.niec == niec)
+				if (c.getNIEC() == niec)
 				{
 					conn = c;
 					break;
@@ -99,7 +130,7 @@ namespace ReseauxOrdinateur
 			ConnexionReseau conn = null ;
             sem.WaitOne();	//Blocage
 			foreach(ConnexionReseau c in listeConnexions){
-				if (c.numeroConnexion == num)
+				if (c.getNumeroConnexion() == num)
 				{
 					conn = c;
 					break;

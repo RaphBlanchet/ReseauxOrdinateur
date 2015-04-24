@@ -15,11 +15,11 @@ namespace ReseauxOrdinateur
 {
 	//Classe représentant une connexion gérée par la couche Transport
     public class ConnexionTransport{
-		public int numeroConnexion;			//Numéro de connexion
-		public string identifiant;			//Identificateur de l'application (ex. MSG)
-        public int adresseSource;			//Adresse source de la connexion
-        public int adresseDestination;		//Adresse destination de la connexion
-        public EtatConnexion etat;			//État en cours de la connexion
+		private int numeroConnexion;			//Numéro de connexion
+		private string identifiant;			//Identificateur de l'application (ex. MSG)
+		private int adresseSource;			//Adresse source de la connexion
+		private int adresseDestination;		//Adresse destination de la connexion
+		private EtatConnexion etat;			//État en cours de la connexion
 
 		//Constructeur de la classe ConnexionTransport
         public ConnexionTransport(int _num, string _identifiant, int _adresseSource, int _adresseDestinataire){
@@ -29,6 +29,30 @@ namespace ReseauxOrdinateur
             adresseDestination = _adresseDestinataire;
 			etat = EtatConnexion.ATTENTE_ETABLISSEMENT;
         }
+
+		public int getNumeroConnexion(){
+			return numeroConnexion;
+		}
+
+		public string getIdentifiant(){
+			return identifiant;
+		}
+
+		public int getAdresseSource(){
+			return adresseSource;
+		}
+
+		public int getAdresseDestination(){
+			return adresseDestination;
+		}
+
+		public EtatConnexion getEtatConnexion(){
+			return etat;
+		}
+
+		public void setEtatConnexion(EtatConnexion e){
+			this.etat = e;
+		}
     }
 
 	//Classe contenant la liste des connexions de Transport
@@ -107,11 +131,11 @@ namespace ReseauxOrdinateur
         public void ConfirmerConnexion(int _numConn)
         {
             ConnexionTransport conn = this[_numConn];
-            conn.etat = EtatConnexion.CONNECTE;
+			conn.setEtatConnexion(EtatConnexion.CONNECTE);
 
 			//Affichage en console et écriture dans le fichier de sortie
-			Utility.AfficherDansConsole("Connexion établie pour " + conn.identifiant, Constantes.OUTPUT_COLOR);
-            Utility.EcrireDansFichier("S_ecr.txt", "Connexion établie pour " + conn.identifiant, true);
+			Utility.AfficherDansConsole("Connexion établie pour " + conn.getIdentifiant(), Constantes.OUTPUT_COLOR);
+			Utility.EcrireDansFichier("S_ecr.txt", "Connexion établie pour " + conn.getIdentifiant(), true);
         }
 
 		//Fermeture d'une connexion selon son numéro de connexion
@@ -121,20 +145,20 @@ namespace ReseauxOrdinateur
 			listeConnexions.Remove (conn);
 
 			//Libération des adresses utilisées
-			adressesUtilises [conn.adresseSource] = false;
-			adressesUtilises [conn.adresseDestination] = false;
+			adressesUtilises [conn.getAdresseSource()] = false;
+			adressesUtilises [conn.getAdresseDestination()] = false;
 			nbAdressesUtilises -= 2;
 
             sem.Release();	//Déblocage
 
 			//Affichage en console et écriture dans le fichier de sortie
-			Utility.AfficherDansConsole("Fermeture de connexion pour " + conn.identifiant + " - " + raison, Constantes.OUTPUT_COLOR);
-			Utility.EcrireDansFichier ("S_ecr.txt", "Fermeture de connexion pour " + conn.identifiant + " - " + raison, true);
+			Utility.AfficherDansConsole("Fermeture de connexion pour " + conn.getIdentifiant() + " - " + raison, Constantes.OUTPUT_COLOR);
+			Utility.EcrireDansFichier ("S_ecr.txt", "Fermeture de connexion pour " + conn.getIdentifiant() + " - " + raison, true);
 		}
 
 		//Fonction permettant de fermer une connexion selon on identifiant d'application
 		public void FermerConnexion(string identifiant, String raison){
-			this.FermerConnexion (this [identifiant].numeroConnexion, raison);
+			this.FermerConnexion (this [identifiant].getNumeroConnexion(), raison);
 		}
 
 		//Fonction permettant de trouver une connexion selon son index dans la liste
@@ -152,7 +176,7 @@ namespace ReseauxOrdinateur
 				for(int i = 0; i < listeConnexions.Count; i++){
 					try{
 						ConnexionTransport c = listeConnexions[i];
-						if (c.numeroConnexion == numConn)
+						if (c.getNumeroConnexion() == numConn)
 						{
 							conn = c;
 							break;
@@ -177,7 +201,7 @@ namespace ReseauxOrdinateur
 				for(int i = 0; i < listeConnexions.Count; i++){
 					try{
 						ConnexionTransport c = listeConnexions[i];
-	                    if (c.identifiant.Equals(identifiant))
+						if (c.getIdentifiant().Equals(identifiant))
 	                    {
 	                        conn = c;
 	                        break;

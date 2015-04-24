@@ -48,7 +48,7 @@ namespace ReseauxOrdinateur
 			ConnexionLiaison conn = null ;
             sem.WaitOne();	//Blocage
 			foreach(ConnexionLiaison c in listeConnexions){
-				if (c.numeroConnexion == _no)
+				if (c.getNumeroConnexion() == _no)
 				{
 					conn = c;
 					break;
@@ -64,14 +64,26 @@ namespace ReseauxOrdinateur
 	//Classe représentant une connexion gérée par la couche Liaison
 	public class ConnexionLiaison
 	{
-		public int numeroConnexion;
-		public int adresseSource;
-		public int adresseDestination;
+		private int numeroConnexion;
+		private int adresseSource;
+		private int adresseDestination;
 
 		public ConnexionLiaison(int _num, int _adrSource, int _adrDestination){
 			numeroConnexion = _num;
 			adresseSource = _adrSource;
 			adresseDestination = _adrDestination;
+		}
+
+		public int getNumeroConnexion(){
+			return numeroConnexion;
+		}
+
+		public int getAdresseSource(){
+			return adresseSource;
+		}
+
+		public int getAdresseDestination(){
+			return adresseDestination;
 		}
 	}
 }

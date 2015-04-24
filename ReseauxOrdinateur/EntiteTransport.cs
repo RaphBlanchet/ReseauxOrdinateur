@@ -22,6 +22,7 @@ namespace ReseauxOrdinateur
 		AnonymousPipeServerStream transportOut;		//Pipe d'écriture permettant la communication avec la couche Réseau
         ListeConnexionsTransport connexions;		//Liste des connexions gérées par la couche Transport
         public bool isRunning = true;				//Booléen déterminant si le processus est en cours de traitement
+		Semaphore pipe_sem = new Semaphore(1,1);	//Sémaphore de blocage d'écriture dans le pipe vers reseau
 
 		//Constructeur de la couche Transport
 		public EntiteTransport(AnonymousPipeClientStream _transportIn, AnonymousPipeServerStream _transportOut)
@@ -72,14 +73,16 @@ namespace ReseauxOrdinateur
 			str += Constantes.FIN_PRIMITIVE;
 
 			try{
+				pipe_sem.WaitOne();
 				//Transformation de la chaîne de caractère en tableau de Bytes
                 byte[] bytes = Encoding.UTF8.GetBytes(str);
 				//Envoie du tableau dans le Pipe vers la couche Réseau
 				transportOut.Write(bytes, 0, str.Length);
-
 			}catch (IOException e){
 				//Affichage du message d'erreur, s'il y en a un
 				Utility.AfficherDansConsole(e.Message, Constantes.ERREUR_COLOR);
+			}finally{
+				pipe_sem.Release ();
 			}
 
         }
@@ -121,7 +124,7 @@ namespace ReseauxOrdinateur
                         try
                         {
 							//Vérification de l'état de connexion
-                            if (connexions[identifiant].etat == EtatConnexion.CONNECTE)
+							if (connexions[identifiant].getEtatConnexion() == EtatConnexion.CONNECTE)
                             {
 								//Envoie de données
                                 EnvoyerDonnees(identifiant, lineSplit[1]);
@@ -152,9 +155,9 @@ namespace ReseauxOrdinateur
 			//Tentative d'ouverture de connexion
             if (conn != null)
             {
-                int numConn = conn.numeroConnexion;
-                int addrSource = conn.adresseSource;
-                int addrDestinataire = conn.adresseDestination;
+				int numConn = conn.getNumeroConnexion();
+				int addrSource = conn.getAdresseSource();
+				int addrDestinataire = conn.getAdresseDestination();
 
 				//Envoie de la primitive de demande de connexion vers la couche Réseau
                 Utility.EcrireDansFichier("S_ecr.txt", "Ouverture de connexion pour " + _identifiant + "...", true);
@@ -165,8 +168,8 @@ namespace ReseauxOrdinateur
 		//Fonction permettant d'envoyer des données vers la couche réseau
 		private void EnvoyerDonnees(string identifiant, string donnees){
 			//Si la connexion a été confirmée, on peut envoyer!
-			if (connexions [identifiant].etat == EtatConnexion.CONNECTE) {
-				ecrire_vers_reseau (connexions[identifiant].numeroConnexion + ";" + N_DATA.req + ";" + donnees);
+			if (connexions [identifiant].getEtatConnexion() == EtatConnexion.CONNECTE) {
+				ecrire_vers_reseau (connexions[identifiant].getNumeroConnexion() + ";" + N_DATA.req + ";" + donnees);
 			}
 		}
 
@@ -177,8 +180,8 @@ namespace ReseauxOrdinateur
 			while (connexions.nbConnexions > 0) {
 				//Fermeture d'une connexion
 				ConnexionTransport conn = connexions.findConnexionAtIndex (0);
-				ecrire_vers_reseau (conn.numeroConnexion + ";" + N_DISCONNECT.req + ";" + conn.adresseDestination);
-				connexions.FermerConnexion (conn.numeroConnexion, "Fin d'exécution");
+				ecrire_vers_reseau (conn.getNumeroConnexion() + ";" + N_DISCONNECT.req + ";" + conn.getAdresseDestination());
+				connexions.FermerConnexion (conn.getNumeroConnexion(), "Fin d'exécution");
 			}
         }
 

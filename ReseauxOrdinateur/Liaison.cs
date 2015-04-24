@@ -48,7 +48,7 @@ namespace ReseauxOrdinateur
 				PaquetDonnees p = (PaquetDonnees)paquet;
 				ConnexionLiaison conn = connexions.findConnexion (paquet.numero_connexion);
 				int rdm = new Random ().Next (8);
-				if (conn.adresseSource % 15 == 0) {	        //Pas de reponse-------------------------------------
+				if (conn.getAdresseSource() % 15 == 0) {	        //Pas de reponse-------------------------------------
 					reponse = null; 
 				} else if(p.pS == rdm){				        //Acquittement négatif
 					reponse = new PaquetAcquittement(p.numero_connexion, p.pR, false);

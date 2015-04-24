@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.IO.Pipes;
 using System.IO;
 
@@ -16,11 +16,12 @@ namespace ReseauxOrdinateur
 {
     class EntiteReseau
     {
-        Liaison liaison;						//Couche Liaison
-		AnonymousPipeClientStream reseauIn;		//Pipe de lecture venant de la couche transport
-		AnonymousPipeServerStream reseauOut;	//Pire d'écriture allant vers la couche transport
-        public bool isRunning = true;			//Booléen déterminant si le Thread est en train de tourner
-		ListeConnexionsReseau connexions;		//Liste contenant les différentes connexions de la couche Réseau
+        Liaison liaison;							//Couche Liaison
+		AnonymousPipeClientStream reseauIn;			//Pipe de lecture venant de la couche transport
+		AnonymousPipeServerStream reseauOut;		//Pire d'écriture allant vers la couche transport
+        public bool isRunning = true;				//Booléen déterminant si le Thread est en train de tourner
+		ListeConnexionsReseau connexions;			//Liste contenant les différentes connexions de la couche Réseau
+		Semaphore pipe_sem = new Semaphore(1,1);	//Sémaphore de blocage d'écriture dans le pipe vers transport
 
 		//Constructeur de la couche Réseau
 		public EntiteReseau(AnonymousPipeClientStream _reseauIn, AnonymousPipeServerStream _reseauOut)
@@ -73,6 +74,7 @@ namespace ReseauxOrdinateur
 
             try
             {
+				pipe_sem.WaitOne();
                 byte[] bytes = Encoding.UTF8.GetBytes(str);		//Transformartion de la chaîne en tableau de Bytes
                 reseauOut.Write(bytes, 0, str.Length);			//Écriture du tableau dans le pipe vers transport
             }
@@ -80,8 +82,15 @@ namespace ReseauxOrdinateur
             {	
 				//Affichage du message d'erreur, s'il y a lieu
 				Utility.AfficherDansConsole (e.Message, Constantes.ERREUR_COLOR);
-            }
+			}finally{
+				pipe_sem.Release ();
+			}
         }
+
+		//Fonction permettant de savoir si on a toujours des connexions d'ouvertes
+		public bool ContientConnexions(){
+			return (connexions.nbConnexions != 0);
+		}
 
 		//Fonction privée permettant de traiter une primitive venant de la couche transport
 		private void traiterPrimitiveDeTransport(string strPrimitive){
@@ -101,7 +110,7 @@ namespace ReseauxOrdinateur
 					ConnexionReseau conn = connexions.EtablirConnexion (Convert.ToInt32 (split [2]), Convert.ToInt32 (split [3]), Convert.ToInt32 (split [0]));
 
 					//Parametres : NIEC, Adresse Source, Adresse Destination
-					PaquetAppel paquet = new PaquetAppel (conn.numeroConnexion, conn.adresseSource, conn.adresseDestinataire);
+					PaquetAppel paquet = new PaquetAppel (conn.getNumeroConnexion(), conn.getAdresseSource(), conn.getAdresseDestination());
 					Paquet reponse = liaison.TraiterPaquetDeReseau (paquet);
 					TraiterPaquetDeLiaison (reponse, paquet, true);
 				} else {										//Le fournisseur internet refuse la connexion
@@ -124,9 +133,9 @@ namespace ReseauxOrdinateur
                     String data = donnees.Substring(0, count);	//On récupère au maximum 128 caractères de données
                     donnees = donnees.Remove(0, count);			//Et on l'enlève de la chaîne d'origine
                     int m = (data.Length == 128 ? 1 : 0);		//Valeur de M : 0 - Il n'y a plus d'autre paquet à transmettre, 1 - Il y en a d'autre
-					PaquetDonnees paquet = new PaquetDonnees(conn.numeroConnexion, conn.pr, conn.ps, m, data);	//Paquet de données
+					PaquetDonnees paquet = new PaquetDonnees(conn.getNumeroConnexion(), conn.getPR(), conn.getPS(), m, data);	//Paquet de données
                     Paquet reponse = liaison.TraiterPaquetDeReseau(paquet);
-					connexions.ModifierPS(conn.numeroConnexion, 1);	//Augmentation de la valeur de P(S)
+					connexions.ModifierPS(conn.getNumeroConnexion(), 1);	//Augmentation de la valeur de P(S)
 					TraiterPaquetDeLiaison(reponse, paquet, true);		//Appel de la fonction pour traiter le paquet reçu de Liaison
                 }
 			} else if (primitive == N_DISCONNECT.req.ToString ()) {         //DÉCONNEXION
@@ -136,7 +145,7 @@ namespace ReseauxOrdinateur
 				connexions.RetirerConnexion (conn);
 
 				//Construction du paquet pour libérer la connexion du coté liaison
-				PaquetDemandeLiberation paquet = new PaquetDemandeLiberation(conn.numeroConnexion, conn.adresseSource, conn.adresseDestinataire);
+				PaquetDemandeLiberation paquet = new PaquetDemandeLiberation(conn.getNumeroConnexion(), conn.getAdresseSource(), conn.getAdresseDestination());
 				liaison.TraiterPaquetDeReseau (paquet);
 			}
 		}
@@ -165,12 +174,12 @@ namespace ReseauxOrdinateur
 				if (reponse is PaquetConnexionEtablie) {                        //Paquet de connexion établie----------------
 					PaquetConnexionEtablie p = (PaquetConnexionEtablie)reponse;
 					conn = connexions.findConnexionWithNum (p.numero_connexion);
-					ecrire_vers_transport (conn.niec + ";" + N_CONNECT.conf + ";" + conn.adresseDestinataire);
+					ecrire_vers_transport (conn.getNIEC() + ";" + N_CONNECT.conf + ";" + conn.getAdresseDestination());
 
 				} else if (reponse is PaquetIndicationLiberation) {             //Paquet d'indication de libération----------
 					PaquetIndicationLiberation p = (PaquetIndicationLiberation)reponse;
 					conn = connexions.findConnexionWithNum(p.numero_connexion);
-					ecrire_vers_transport(conn.niec + ";" + N_DISCONNECT.ind + ";" + conn.adresseDestinataire + ";" + p.raison);
+					ecrire_vers_transport(conn.getNIEC() + ";" + N_DISCONNECT.ind + ";" + conn.getAdresseDestination() + ";" + p.raison);
 
 				} else if (reponse is PaquetAcquittement) {                     //Paquet d'acquittement----------------------
 					PaquetAcquittement p = (PaquetAcquittement)reponse;
@@ -179,7 +188,7 @@ namespace ReseauxOrdinateur
 					if (type == Constantes.TYPE_PAQUET_ACQUITTEMENT_POSITIF)    //Acquittement positif-----------------------
 					{
 						conn = connexions.findConnexionWithNum(reponse.numero_connexion);
-						ecrire_vers_transport(conn.niec + ";" + N_DATA.ind + ";" + conn.adresseSource + ";" + conn.adresseDestinataire);
+						ecrire_vers_transport(conn.getNIEC() + ";" + N_DATA.ind + ";" + conn.getAdresseSource() + ";" + conn.getAdresseDestination());
 						connexions.ModifierPR(reponse.numero_connexion, 1);	//Modification du P(R) de la connexion
 					}
 					else                                                        //Acquittement négatif - On tente de renvoyer le paquet
@@ -219,13 +228,13 @@ namespace ReseauxOrdinateur
 			//Récupération de la connexion et retrait
 			ConnexionReseau conn = connexions.findConnexionWithNum (no_conn);
 			connexions.RetirerConnexion (conn);
-			int addrDestination = conn.adresseDestinataire;
+			int addrDestination = conn.getAdresseDestination();
 
 			//Affichage à la console du message de déconnexion
-			Utility.AfficherDansConsole("*Réseau : Aucune réponse du distant - Déconnexion de " + conn.niec + "*", Constantes.ERREUR_COLOR);
+			Utility.AfficherDansConsole("*Réseau : Aucune réponse du distant - Déconnexion de " + conn.getNIEC() + "*", Constantes.ERREUR_COLOR);
 
 			//Envoie de la primitive de déconnexion
-			ecrire_vers_transport (conn.niec + ";" + N_DISCONNECT.ind + ";" + addrDestination + ";" + raison);
+			ecrire_vers_transport (conn.getNIEC() + ";" + N_DISCONNECT.ind + ";" + addrDestination + ";" + raison);
 		}
     }
 }
