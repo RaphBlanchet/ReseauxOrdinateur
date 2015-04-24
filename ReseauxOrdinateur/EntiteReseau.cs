@@ -1,5 +1,5 @@
 ﻿/*	EntiteReseau.cs
- * 	Par Raphaël Blanchet, Catherine Béliveau, Joel Gbalou, Sébastien Piché Aubin et Marfous Lawani
+ * 	Par Raphaël Blanchet, Catherine Béliveau, Joel Gbalou, Sébastien Piché Aubin et Manfouss Lawani
  * 	Créé le 1er Avril 2015
  * 	Classe permettant d'implémenter la couche Réseau du protocole OSI
  */
