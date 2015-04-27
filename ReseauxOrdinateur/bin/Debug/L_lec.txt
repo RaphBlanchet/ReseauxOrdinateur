@@ -1,12 +1,14 @@
-Paquet : ConnexionEtablie | Numéro connexion : 0 | Type Paquet : 00001111 | Adresse Source : 103 | Adresse Destination : 27
+Paquet : ConnexionEtablie | Numéro connexion : 0 | Type Paquet : 00001111 | Adresse Source : 229 | Adresse Destination : 46
 Paquet : Acquittement | Numéro Connexion : 0 | P(R) : 1 | Type Paquet : 100001
-Paquet : ConnexionEtablie | Numéro connexion : 1 | Type Paquet : 00001111 | Adresse Source : 241 | Adresse Destination : 225
-Paquet : Acquittement | Numéro Connexion : 1 | P(R) : 1 | Type Paquet : 100001
-Paquet : ConnexionEtablie | Numéro connexion : 2 | Type Paquet : 00001111 | Adresse Source : 40 | Adresse Destination : 249
+Paquet : ConnexionEtablie | Numéro connexion : 1 | Type Paquet : 00001111 | Adresse Source : 69 | Adresse Destination : 220
+Paquet : Acquittement | Numéro Connexion : 1 | P(R) : 0 | Type Paquet : 001001
+Paquet : Acquittement | Numéro Connexion : 1 | P(R) : 0 | Type Paquet : 001001
+Paquet : ConnexionEtablie | Numéro connexion : 2 | Type Paquet : 00001111 | Adresse Source : 28 | Adresse Destination : 70
 Paquet : Acquittement | Numéro Connexion : 2 | P(R) : 1 | Type Paquet : 100001
-Paquet : IndicationLiberation | Numéro connexion : 3 | Type Paquet : 00010011 | Adresse Source : 130 | Adresse Destination : 173
+Paquet : ConnexionEtablie | Numéro connexion : 3 | Type Paquet : 00001111 | Adresse Source : 118 | Adresse Destination : 244
+Paquet : Acquittement | Numéro Connexion : 3 | P(R) : 1 | Type Paquet : 100001
 Paquet : Acquittement | Numéro Connexion : 0 | P(R) : 2 | Type Paquet : 200001
 Paquet : Acquittement | Numéro Connexion : 0 | P(R) : 3 | Type Paquet : 300001
-Paquet : ConnexionEtablie | Numéro connexion : 4 | Type Paquet : 00001111 | Adresse Source : 89 | Adresse Destination : 23
+Paquet : ConnexionEtablie | Numéro connexion : 4 | Type Paquet : 00001111 | Adresse Source : 77 | Adresse Destination : 94
 Paquet : Acquittement | Numéro Connexion : 4 | P(R) : 0 | Type Paquet : 001001
 Paquet : Acquittement | Numéro Connexion : 4 | P(R) : 0 | Type Paquet : 001001

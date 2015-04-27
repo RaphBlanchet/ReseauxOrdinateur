@@ -162,10 +162,6 @@ namespace ReseauxOrdinateur
 					deconnecterVoieLogique(origin.numero_connexion, "Aucune reponse du distant");
 				}
 
-				/*if (reponse == null) {	//Toujours pas de réponse - Déconnexion
-					deconnecterVoieLogique (origin.numero_connexion, "Aucune reponse du distant");
-				}*/
-
 			} else {					//Traitement de la réponse
 				//Affichage du paquet reçu
 				Utility.AfficherDansConsole("Réseau recoit de Liaison : " + reponse.ToString (), Constantes.RESEAU_LIAISON_COLOR);
@@ -202,25 +198,9 @@ namespace ReseauxOrdinateur
 							//Déconnexion de la voie logique
 							deconnecterVoieLogique (origin.numero_connexion, "Acquittement negatif");
 						}
-
-
-						/*if (p_rep == null) {	//Pas de réponse...
-							
-						} else {
-							type = p_rep.typePaquet.Substring (1);
-							if (type == Constantes.TYPE_PAQUET_ACQUITTEMENT_NEGATIF) { //On a encore un acquittement négatif, on se déconnecte
-								deconnecterVoieLogique (p_rep.numero_connexion, "Acquittement negatif");
-							} else {		//On reçoit un acquittement positif, on notifie la couche de Transport
-								conn = connexions.findConnexionWithNum(reponse.numero_connexion);
-								ecrire_vers_transport(conn.niec + ";" + N_DATA.ind + ";" + conn.adresseSource + ";" + conn.adresseDestinataire);
-								connexions.ModifierPR(reponse.numero_connexion, 1);
-							}
-						}*/
-
 					}
 				}
 			}
-
         }
 
 		//Fonction permettant de déconnecter la voie logique
@@ -231,7 +211,7 @@ namespace ReseauxOrdinateur
 			int addrDestination = conn.getAdresseDestination();
 
 			//Affichage à la console du message de déconnexion
-			Utility.AfficherDansConsole("*Réseau : Aucune réponse du distant - Déconnexion de " + conn.getNIEC() + "*", Constantes.ERREUR_COLOR);
+			Utility.AfficherDansConsole("*Réseau : " + raison + " - Déconnexion de " + conn.getNIEC() + "*", Constantes.ERREUR_COLOR);
 
 			//Envoie de la primitive de déconnexion
 			ecrire_vers_transport (conn.getNIEC() + ";" + N_DISCONNECT.ind + ";" + addrDestination + ";" + raison);
